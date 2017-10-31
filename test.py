@@ -45,7 +45,7 @@ item_type.set_name('note')
 ################################
 from item import *
 
-item = Item('First Item!', '', '', '', '', '', '', '')
+item = Item(3, 'First Item!', '', '', '', '', '', '', '')
 #print(item.name)
 #print(item.created_date)
 
@@ -71,20 +71,28 @@ priority_list.add(priority_normal)
 priority_okay = Priority(2, 'okay', 3)
 priority_list.add(priority_okay)
 
-print(priority_list)
-print()
+#print(priority_list)
+#print()
 
 new_list = ((0, 'super', 1), (1, 'normal', 2), (2, 'okay', 3))
 priority_list.edit(new_list)
-print(priority_list)
-print()
+#print(priority_list)
+#print()
 
 new_list = ((0, 'super', 1), (1, 'normal', 2), (2, 'okay', 3), (3, 'hmm', 4))
 priority_list.edit(new_list)
-print(priority_list)
-print()
+#print(priority_list)
+#print()
 
 new_list = ((0, 'super', 1), (1, 'normal', 2), (2, 'ha!', 4))
 priority_list.edit(new_list)
-print(priority_list)
-print()
+#print(priority_list)
+#print()
+
+################################
+from list import *
+
+list = List()
+#print(list.get_next_id())
+
+

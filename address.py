@@ -6,7 +6,7 @@ class Address():
         self.state = state
         self.zip_code = zip_code
 
-    def concat(self):
+    def __str__(self):
         address = self.street_address
         if self.city != '':
             if self.street_address != '':

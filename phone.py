@@ -6,8 +6,5 @@ class Phone():
         self.prefix = input[3: 6]  # Next 3 digits
         self.line = input[6: 10]  # Last 4 digits
 
-    def concat(self):
-        return '(' + self.area_code + ')' + self.prefix + '-' + self.line
-
     def __str__(self):
-        return self.concat()
+        return '(' + self.area_code + ')' + self.prefix + '-' + self.line

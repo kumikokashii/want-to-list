@@ -1,8 +1,9 @@
 
 class ItemType():
-    def __init__(self, name='check'):
-        self.id = 0  # Wanna have it incremented
+    def __init__(self, id, name):
+        self.id = id
         self.name = name
 
-    def set_name(self, name):
-        self.name = name
+    def __str__(self):
+        return str(self.id) + ' ' + self.name 
+
