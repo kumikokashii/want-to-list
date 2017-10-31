@@ -29,10 +29,10 @@ spend = Money(4.355)
 ################################
 from priority import *
 
-priority = Priority('not important')
-#print(priority.name)
+priority = Priority(0, 'normal', 2)
+#print(priority)
 priority.set_name('super important')
-#print(priority.name)
+#print(priority)
 
 ################################
 from item_type import *
@@ -52,8 +52,39 @@ item = Item('First Item!', '', '', '', '', '', '', '')
 from list import *
 
 list = List()
-print(list.list)
+#print(list.list)
 list.add_item(item)
-print(list.list[0].name)
+#print(list.list[0].name)
 
+################################
+from priority_list import *
 
+priority_list = PriorityList()
+#print(priority_list)
+
+priority_high = Priority(0, 'high', 1)
+priority_list.add(priority_high)
+
+priority_normal = Priority(1, 'normal', 2)
+priority_list.add(priority_normal)
+
+priority_okay = Priority(2, 'okay', 3)
+priority_list.add(priority_okay)
+
+print(priority_list)
+print()
+
+new_list = ((0, 'super', 1), (1, 'normal', 2), (2, 'okay', 3))
+priority_list.edit(new_list)
+print(priority_list)
+print()
+
+new_list = ((0, 'super', 1), (1, 'normal', 2), (2, 'okay', 3), (3, 'hmm', 4))
+priority_list.edit(new_list)
+print(priority_list)
+print()
+
+new_list = ((0, 'super', 1), (1, 'normal', 2), (2, 'ha!', 4))
+priority_list.edit(new_list)
+print(priority_list)
+print()
