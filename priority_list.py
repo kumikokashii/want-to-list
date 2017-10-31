@@ -7,7 +7,7 @@ class PriorityList():
     def __str__(self):
         output = ''
         for priority in self.list:
-            output += priority.concat()
+            output += str(priority)
             output += '\n'
         return output 
 
@@ -39,3 +39,8 @@ class PriorityList():
 
         self.list = new_priority_list
 
+    def set_default(self):
+        self.list = []
+        self.add(Priority(0, 'high', 1))
+        self.add(Priority(1, 'normal', 2))
+        self.add(Priority(2, 'low', 3))

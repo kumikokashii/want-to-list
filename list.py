@@ -19,11 +19,16 @@ class List():
                 max_id = item.id
         return max_id + 1
 
-    def add_item(self, name, item_type, parent_item, 
-                 due_date, priority, picture, money, contact_info):
+    def add_item(self, name, item_type=None, parent_item=None, 
+                 due_date=None, priority=None, picture=None, money=0, contact_info=None):
         id = self.get_next_id()
         created_date = datetime.today().date()
         item = Item(id, name, item_type, parent_item, 
                     created_date, due_date, priority, picture, 
                     money, contact_info)
         self.list.append(item)
+
+    def set_default(self):
+        self.list = []
+        self.add_item(name='Eat')
+        self.add_item(name='Sleep')
