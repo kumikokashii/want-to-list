@@ -1,5 +1,7 @@
 from .incremental_id_list import *
 from .contact_info import *
+from .phone import *
+from .address import *
 
 class ContactInfoBook():
     def __init__(self):
@@ -15,4 +17,6 @@ class ContactInfoBook():
 
     def set_default(self):
         self.book = IncrementalIDList()
-        self.add_contact_info(name='7Eleven', phone='7117117117', address=None)
+        self.add_contact_info(name='7Eleven', 
+                              phone=Phone('7117117117'), 
+                              address=Address('711 Fun St', 'Dream Land', 'CA', '71171'))
