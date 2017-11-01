@@ -37,3 +37,12 @@ class Item():
 
     def short_str(self):
         return str(self.id) + ' ' + self.name
+
+    def change_parent_item(self, new_parent_item):
+        self.parent_item = new_parent_item
+
+    def change_item_type(self, new_item_type):
+        self.item_type = new_item_type
+
+    def toggle_check(self):
+        self.is_checked = not self.is_checked

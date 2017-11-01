@@ -1,27 +1,20 @@
+from incremental_id_list import *
 from item_type import *
 
 class ItemTypeList():
     def __init__(self):
-        self.list = []
+        self.list = IncrementalIDList() 
 
     def __str__(self):
-        output = ''
-        for item_type in self.list:
-            output += str(item_type)
-            output += '\n'
-        return output
+        return str(self.list)
 
-    def add(self, item_type):
+    def add_item_type(self, name):
+        id = self.list.get_next_id()
+        item_type = ItemType(id, name)
         self.list.append(item_type)
 
-    def get_item_type_by_name(self, name):
-        for item_type in self.list:
-            if item_type.name == name:
-                return item_type
-        return None
-
     def set_default(self):
-        self.list = []
-        self.add(ItemType(0, 'check'))
-        self.add(ItemType(1, 'note'))
+        self.list = IncrementalIDList()
+        self.add_item_type('check')
+        self.add_item_type('note')
 

@@ -1,33 +1,26 @@
+from incremental_id_list import *
 from priority import *
 
 class PriorityList():
     def __init__(self):
-        self.list = []
+        self.list = IncrementalIDList()
 
     def __str__(self):
-        output = ''
-        for priority in self.list:
-            output += str(priority)
-            output += '\n'
-        return output 
+        return str(self.list)
 
-    def add(self, priority):
+    def add_priority(self, name, importance):
+        id = self.list.get_next_id()
+        priority = Priority(id, name, importance) 
         self.list.append(priority)
-
-    def get_priority_by_id(self, id):
-        for priority in self.list:
-            if priority.id == id:
-                return priority
-        return None
 
     def edit(self, new_list):
         # new_list is a user input. It's a tuple of tuples. ((id, name, importance), ...)
         
-        new_priority_list = []
+        new_priority_list = IncrementalIDList()
         for new_priority in new_list:
             new_id, new_name, new_importance = new_priority
 
-            priority = self.get_priority_by_id(new_id)
+            priority = self.list.get_elem_by_id(new_id)
             if priority:
                 # If id exists, overwrite name and importance
                 priority.name = new_name
@@ -40,7 +33,7 @@ class PriorityList():
         self.list = new_priority_list
 
     def set_default(self):
-        self.list = []
-        self.add(Priority(0, 'high', 1))
-        self.add(Priority(1, 'normal', 2))
-        self.add(Priority(2, 'low', 3))
+        self.list = IncrementalIDList()
+        self.add_priority(name='high', importance=1)
+        self.add_priority(name='normal', importance=2)
+        self.add_priority(name='low', importance=3)
