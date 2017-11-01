@@ -1,5 +1,5 @@
-from incremental_id_list import *
-from priority import *
+from .incremental_id_list import *
+from .priority import *
 
 class PriorityList():
     def __init__(self):

@@ -1,5 +1,5 @@
-from incremental_id_list import *
-from item_type import *
+from .incremental_id_list import *
+from .item_type import *
 
 class ItemTypeList():
     def __init__(self):

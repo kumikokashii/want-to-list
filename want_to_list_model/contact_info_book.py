@@ -1,5 +1,5 @@
-from incremental_id_list import *
-from contact_info import *
+from .incremental_id_list import *
+from .contact_info import *
 
 class ContactInfoBook():
     def __init__(self):

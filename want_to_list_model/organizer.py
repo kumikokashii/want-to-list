@@ -1,7 +1,7 @@
-from item_type_list import *
-from priority_list import *
-from contact_info_book import *
-from list import *
+from .item_type_list import *
+from .priority_list import *
+from .contact_info_book import *
+from .list import *
 
 import pickle
 
