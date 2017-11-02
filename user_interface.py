@@ -39,6 +39,7 @@ class UserInterface(Tk):
         nb, tabs = self.add_notebook(['View', 'Add'], self.tabs['Contact Info'])
         self.contact_info.set_attributes(nb=nb, view=tabs['View'], add=tabs['Add'])
         self.contact_info.refresh_view()
+        self.contact_info.initialize_add()
 
         # Start
         self.mainloop()
