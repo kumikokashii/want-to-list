@@ -2,13 +2,16 @@
 from tkinter import *
 from tkinter import ttk
 
-from .ui_tab_in_notebook import *
 from want_to_list_model import *
+from .ui_tab_in_notebook import *
+from want_to_list_controller import *
 
 class UIContactInfo(UITabInNB):
     def __init__(self, parent, tab_name, contact_info_book):
         super().__init__(parent, tab_name)
         self.contact_info_book = contact_info_book
+        self.controller = CTRLContactInfo()
+
         self.nb = ttk.Notebook(self)
         self.nb.grid()  # Need to specify parameters???
         self.view = UITabInNB(parent=self.nb, tab_name='View')
@@ -70,5 +73,5 @@ class UIContactInfo(UITabInNB):
             input = inputs[i]
             entries[field] = input
 
-        button = Button(self.add, text='Add ^_^', command=(lambda: self.add_contact_info(entries)))
+        button = Button(self.add, text='Add ^_^', command=(lambda: self.controller.add(entries)))
         button.grid(row=len(table), column=1)

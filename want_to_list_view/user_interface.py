@@ -1,9 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 
-from .ui_item_list import *
-from .ui_contact_info import *
-from .ui_priorities import *
+from want_to_list_view import *
 
 class UserInterface(Tk):
     def __init__(self, organizer):
