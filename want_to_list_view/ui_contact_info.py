@@ -2,7 +2,7 @@
 from tkinter import *
 from tkinter import ttk
 
-from ui_tab_in_notebook import *
+from .ui_tab_in_notebook import *
 from want_to_list_model import *
 
 class UIContactInfo(UITabInNB):

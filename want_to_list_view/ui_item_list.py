@@ -2,7 +2,7 @@
 from tkinter import *
 from tkinter import ttk
 
-from ui_tab_in_notebook import *
+from .ui_tab_in_notebook import *
 
 class UIItemList(UITabInNB):
     def __init__(self, parent, tab_name, item_list):

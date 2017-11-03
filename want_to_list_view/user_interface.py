@@ -1,9 +1,9 @@
 from tkinter import *
 from tkinter import ttk
 
-from ui_item_list import *
-from ui_contact_info import *
-from ui_priorities import *
+from .ui_item_list import *
+from .ui_contact_info import *
+from .ui_priorities import *
 
 class UserInterface(Tk):
     def __init__(self, organizer):
@@ -23,5 +23,5 @@ class UserInterface(Tk):
         self.item_list.refresh_view()
         self.contact_info.refresh_view()
         self.contact_info.initialize_add()
-        self.mainloop()
+        self.priorities.refresh()
 
