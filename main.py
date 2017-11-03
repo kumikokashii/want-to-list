@@ -6,7 +6,7 @@ organizer = Organizer()
 #organizer = organizer.load()
 organizer.load_default()
 
-#print(organizer)
+print(organizer)
 
 ui = UserInterface(organizer)
 ui.initialize()

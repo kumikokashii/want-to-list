@@ -2,19 +2,17 @@
 from tkinter import *
 from tkinter import ttk
 
+from ui_tab_in_notebook import *
 from want_to_list_model import *
 
-class UIContactInfo():
-    def __init__(self, contact_info_book, nb=None, tabs=None):
+class UIContactInfo(UITabInNB):
+    def __init__(self, parent, tab_name, contact_info_book):
+        super().__init__(parent, tab_name)
         self.contact_info_book = contact_info_book
-        self.nb = nb
-        self.view = None if tabs is None else tabs['View']
-        self.add = None if tabs is None else tabs['Add']
-
-    def set_attributes(self, nb, view, add):
-        self.nb = nb
-        self.view = view
-        self.add = add
+        self.nb = ttk.Notebook(self)
+        self.nb.grid()  # Need to specify parameters???
+        self.view = UITabInNB(parent=self.nb, tab_name='View')
+        self.add = UITabInNB(parent=self.nb, tab_name='Add')
 
     def refresh_view(self):
         table = []

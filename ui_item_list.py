@@ -2,17 +2,16 @@
 from tkinter import *
 from tkinter import ttk
 
-class UIItemList():
-    def __init__(self, item_list, nb=None, tabs=None):
-        self.item_list = item_list
-        self.nb = nb
-        self.view = None if tabs is None else tabs['View']
-        self.add = None if tabs is None else tabs['Add']
+from ui_tab_in_notebook import *
 
-    def set_attributes(self, nb, view, add):
-        self.nb = nb
-        self.view = view
-        self.add = add
+class UIItemList(UITabInNB):
+    def __init__(self, parent, tab_name, item_list):
+        super().__init__(parent, tab_name)
+        self.item_list = item_list
+        self.nb = ttk.Notebook(self)
+        self.nb.grid()  # Need to specify parameters???
+        self.view = UITabInNB(parent=self.nb, tab_name='View') 
+        self.add = UITabInNB(parent=self.nb, tab_name='Add')
 
     def refresh_view(self):
         table = []
