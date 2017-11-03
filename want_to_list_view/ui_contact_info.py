@@ -16,19 +16,27 @@ class UIContactInfo(UITabInNB):
 
     def refresh_view(self):
         table = []
-        header = ['Name', 'Phone', 'Address']
-        table.append(header)
+
+        row = []
+        for header in ['Name', 'Phone', 'Address', 'Remove']:
+            row.append(Label(self.view, text=header)) 
+        table.append(row)
 
         for contact_info in self.contact_info_book:
+            id = contact_info.id
             name = contact_info.name
             phone = contact_info.phone
             address = contact_info.address
-            table.append([name, phone, address])
+
+            row = []
+            for cell in [name, phone, address]:
+                row.append(Label(self.view, text=cell))
+            row.append(Button(self.view, text='X', command=(lambda: self.controller.remove(id))))
+            table.append(row)
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                cell = Label(self.view, text=table[i][j])
-                cell.grid(row=i, column=j)
+                table[i][j].grid(row=i, column=j)
 
     def initialize_add(self):
         table = [['Name', -1, None], 

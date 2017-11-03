@@ -24,3 +24,12 @@ class CTRLContactInfo():
 
         # Refresh Contact Info View
         self.ui.contact_info.refresh_view()
+
+    def remove(self):
+        pass
+        # Remove contact info from organizer
+
+        # Refresh Contact Info View
+
+        # Refresh Item List View and Item List Add
+
