@@ -27,20 +27,23 @@ class UIPriorities(UITabInNB):
             name = priority.name
             importance = priority.importance
 
-            row = []
+            name_importance_entries = []
             for cell in [name, importance]:
                 entry = Entry(self)
                 entry.insert(0, cell)
-                row.append(entry)
-            entries[id] = row
-            row.append(Button(self, text='X', command=(lambda: self.controller.remove(id))))
+                name_importance_entries.append(entry)
+            entries[id] = name_importance_entries
+            remove_by_id = self.controller.get_remove_by_id_func(id)
+            x_button = Button(self, text='X', command=remove_by_id)
+            row = name_importance_entries + [x_button]
             table.append(row)
 
-        row = []
+        name_importance_entries = []
         for i in range(2):
-            row.append(Entry(self))
-        entries[-1] = row
-        table.append(row)
+            entry = Entry(self)
+            name_importance_entries.append(entry)
+        entries[-1] = name_importance_entries
+        table.append(name_importance_entries)
 
         for i in range(len(table)):
             for j in range(len(table[i])):

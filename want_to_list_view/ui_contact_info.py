@@ -33,7 +33,9 @@ class UIContactInfo(UITabInNB):
             row = []
             for cell in [name, phone, address]:
                 row.append(Label(self.view, text=cell))
-            row.append(Button(self.view, text='X', command=(lambda: self.controller.remove(id))))
+            remove_by_id = self.controller.get_remove_by_id_func(id)
+            x_button = Button(self.view, text='X', command=remove_by_id)
+            row.append(x_button)
             table.append(row)
 
         for i in range(len(table)):

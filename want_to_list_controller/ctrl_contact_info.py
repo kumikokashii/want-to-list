@@ -28,6 +28,11 @@ class CTRLContactInfo():
         # Go to Contact Info View
         pass
 
+    def get_remove_by_id_func(self, id):
+        def remove():
+            self.remove(id)
+        return remove
+
     def remove(self, id):
         # Remove contact info from organizer
         self.contact_info_book.remove_elem_by_id(id)

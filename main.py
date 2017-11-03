@@ -9,11 +9,11 @@ organizer.load_default()
 print(organizer)
 
 ui = UserInterface(organizer)
-ui.initialize()
 
 controller = Controller(organizer, ui)
 ui.set_controller(controller)
 
+ui.initialize()
 ui.mainloop()
 
 #organizer.save()
