@@ -2,9 +2,9 @@
 from tkinter import *
 from tkinter import ttk
 
-class UIList():
-    def __init__(self, list, nb=None, tabs=None):
-        self.list = list
+class UIItemList():
+    def __init__(self, item_list, nb=None, tabs=None):
+        self.item_list = item_list
         self.nb = nb
         self.view = None if tabs is None else tabs['View']
         self.add = None if tabs is None else tabs['Add']
@@ -19,7 +19,7 @@ class UIList():
         header = ['Check', 'Name', 'Due Date', 'Priority']
         table.append(header)
 
-        for item in self.list.list:
+        for item in self.item_list:
             is_checked = item.is_checked
             name = item.name
             due_date = item.due_date

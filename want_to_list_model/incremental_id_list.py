@@ -10,6 +10,12 @@ class IncrementalIDList(list):
             output += '\n'
         return output
 
+    def copy(self):
+        output = IncrementalIDList()
+        for elem in self:
+            output.append(elem)
+        return output 
+
     def get_next_id(self):
         max_id = -1
         for elem in self:
@@ -28,3 +34,4 @@ class IncrementalIDList(list):
             if elem.name == name:
                 return elem
         return None
+

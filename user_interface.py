@@ -7,7 +7,7 @@ from ui_contact_info import *
 class UserInterface(Tk):
     def __init__(self, organizer):
         super().__init__()
-        self.list = UIList(organizer.list)  
+        self.item_list = UIItemList(organizer.item_list)  
         self.contact_info = UIContactInfo(organizer.contact_info_book)
 
     def add_notebook(self, tab_names, parent=None):
@@ -33,8 +33,8 @@ class UserInterface(Tk):
         
         # Add tabs within tabs
         nb, tabs = self.add_notebook(['View', 'Add'], self.tabs['List'])
-        self.list.set_attributes(nb=nb, view=tabs['View'], add=tabs['Add'])
-        self.list.refresh_view()
+        self.item_list.set_attributes(nb=nb, view=tabs['View'], add=tabs['Add'])
+        self.item_list.refresh_view()
 
         nb, tabs = self.add_notebook(['View', 'Add'], self.tabs['Contact Info'])
         self.contact_info.set_attributes(nb=nb, view=tabs['View'], add=tabs['Add'])

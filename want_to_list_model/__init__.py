@@ -5,7 +5,7 @@ from .incremental_id_list import *
 from .item import *
 from .item_type import *
 from .item_type_list import *
-from .list import *
+from .item_list import *
 from .money import *
 from .organizer import *
 from .phone import *

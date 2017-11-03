@@ -21,7 +21,7 @@ class UIContactInfo():
         header = ['Name', 'Phone', 'Address']
         table.append(header)
 
-        for contact_info in self.contact_info_book.book:
+        for contact_info in self.contact_info_book:
             name = contact_info.name
             phone = contact_info.phone
             address = contact_info.address
