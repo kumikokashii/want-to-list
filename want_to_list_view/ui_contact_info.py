@@ -2,15 +2,12 @@
 from tkinter import *
 from tkinter import ttk
 
-from want_to_list_model import *
 from .ui_tab_in_notebook import *
-from want_to_list_controller import *
 
 class UIContactInfo(UITabInNB):
     def __init__(self, parent, tab_name, contact_info_book):
         super().__init__(parent, tab_name)
         self.contact_info_book = contact_info_book
-        self.controller = CTRLContactInfo()
 
         self.nb = ttk.Notebook(self)
         self.nb.grid()  # Need to specify parameters???
@@ -32,18 +29,6 @@ class UIContactInfo(UITabInNB):
             for j in range(len(table[i])):
                 cell = Label(self.view, text=table[i][j])
                 cell.grid(row=i, column=j)
-
-    def add_contact_info(self, entries):  # Is it okay for this to be here?! Feels like it's doing a lot for being in this class.
-        contact_info = {}
-        for field, input in entries.items():
-            contact_info[field] = input.get()
-
-        name = contact_info['name']
-        phone = Phone(contact_info['phone'])
-        address = Address(contact_info['street address'], contact_info['city'], contact_info['state'], contact_info['zip code'])
-        self.contact_info_book.add_contact_info(name=name, phone=phone, address=address)
-        
-        self.refresh_view()
 
     def initialize_add(self):
         table = [['Name', -1, None], 

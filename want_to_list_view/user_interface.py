@@ -17,6 +17,12 @@ class UserInterface(Tk):
         self.contact_info = UIContactInfo(parent=self.nb, tab_name='Contact Info', contact_info_book=organizer.contact_info_book)
         self.priorities = UIPriorities(parent=self.nb, tab_name='Priorities', priority_list=organizer.priority_list)
 
+    def set_controller(self, controller):
+        self.controller = controller
+        self.item_list.controller = controller.item_list
+        self.contact_info.controller = controller.contact_info
+        self.priorities.controller = controller.priorities
+
     def initialize(self):
         self.item_list.refresh_view()
         self.contact_info.refresh_view()

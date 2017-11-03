@@ -7,7 +7,7 @@ class Controller():
     def __init__(self, organizer, ui):
         self.organizer = organizer
         self.ui = ui
-        self.item_list = CTRLItemList()
-        self.contact_info = CTRLContactInfo()
-        self.priorities = CTRLPriorities()
+        self.item_list = CTRLItemList(organizer, ui)
+        self.contact_info = CTRLContactInfo(organizer, ui)
+        self.priorities = CTRLPriorities(organizer, ui)
 

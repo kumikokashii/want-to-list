@@ -12,7 +12,7 @@ ui = UserInterface(organizer)
 ui.initialize()
 
 controller = Controller(organizer, ui)
-#ui.set_controller(controller)
+ui.set_controller(controller)
 
 ui.mainloop()
 
