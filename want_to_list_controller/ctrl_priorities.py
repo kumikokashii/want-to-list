@@ -11,11 +11,12 @@ class CTRLPriorities():
             name_entry, importance_entry = name_importance_entries
             name = name_entry.get()
             importance = importance_entry.get()
-            print(id, name, importance)
-            if id == 'new':
+            if id == -1:
                 # New priority row
-                continue  # Check if its legit
-            
+                if (name == '') or (importance == ''):
+                    continue
+                else:
+                    id = self.priority_list.get_next_id()
             new_list.append((id, name, importance))
         return new_list
 
