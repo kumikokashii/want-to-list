@@ -10,6 +10,9 @@ class PriorityList(IncrementalIDList):
         priority = Priority(id, name, importance) 
         self.append(priority)
 
+    def get_sorted_by_importance(self):
+        return sorted(self, key=lambda priority: priority.importance)
+
     def edit(self, new_list):
         # new_list is a user input. It's a tuple of tuples. ((id, name, importance), ...)
         

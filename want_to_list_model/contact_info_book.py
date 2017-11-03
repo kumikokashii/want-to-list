@@ -12,10 +12,6 @@ class ContactInfoBook(IncrementalIDList):
         contact_info = ContactInfo(id, name, phone, address)
         self.append(contact_info)
 
-    def remove_contact_info(self, id):
-        contact_info = self.get_elem_by_id(id)
-        self.remove(contact_info)
-
     def set_default(self):
         self.clear()
         self.add_contact_info(name='7Eleven', 

@@ -35,3 +35,7 @@ class IncrementalIDList(list):
                 return elem
         return None
 
+    def remove_elem_by_id(self, id):
+        elem = self.get_elem_by_id(id)
+        self.remove(elem)
+

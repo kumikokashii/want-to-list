@@ -30,7 +30,7 @@ class CTRLContactInfo():
 
     def remove(self, id):
         # Remove contact info from organizer
-        self.contact_info_book.remove_contact_info(id)
+        self.contact_info_book.remove_elem_by_id(id)
 
         # Refresh Contact Info View
         self.ui.contact_info.refresh_view()

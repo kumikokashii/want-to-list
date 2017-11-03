@@ -10,16 +10,42 @@ class UIPriorities(UITabInNB):
         self.priority_list = priority_list
 
     def refresh(self):
-        table = []
-        header = ['Name', 'Importance', 'Remove']
-        table.append(header)
+        self.cleanup()
 
-        for priority in self.priority_list:
+        table = []
+
+        row = []
+        for header in ['Name', 'Importance', 'Remove']:
+            row.append(Label(self, text=header)) 
+        table.append(row)
+
+        entries = {}
+
+        sorted = self.priority_list.get_sorted_by_importance()
+        for priority in sorted:
+            id = priority.id
             name = priority.name
             importance = priority.importance
-            table.append([name, importance, 'X'])
+
+            row = []
+            for cell in [name, importance]:
+                entry = Entry(self)
+                entry.insert(0, cell)
+                row.append(entry)
+            entries[id] = row
+            row.append(Button(self, text='X', command=(lambda: self.controller.remove(id))))
+            table.append(row)
+
+        row = []
+        for i in range(2):
+            row.append(Entry(self))
+        entries[-1] = row
+        table.append(row)
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                cell = Label(self, text=table[i][j])
-                cell.grid(row=i, column=j)
+                table[i][j].grid(row=i, column=j)
+
+        button = Button(self, text='Edit!', command=(lambda: self.controller.edit(entries)))
+        button.grid()
+
