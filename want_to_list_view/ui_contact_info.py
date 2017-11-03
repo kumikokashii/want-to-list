@@ -15,6 +15,8 @@ class UIContactInfo(UITabInNB):
         self.add = UITabInNB(parent=self.nb, tab_name='Add')
 
     def refresh_view(self):
+        self.view.cleanup()
+
         table = []
 
         row = []
