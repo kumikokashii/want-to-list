@@ -10,7 +10,7 @@ class Organizer():
         self.item_type_list = ItemTypeList()
         self.priority_list = PriorityList()
         self.contact_info_book = ContactInfoBook()
-        self.item_list = ItemList(self.item_type_list)
+        self.item_list = ItemList()
 
     def __str__(self):
         output = ''
@@ -30,8 +30,10 @@ class Organizer():
     
     def load_default(self):
         self.item_type_list.set_default()
+        self.item_list.set_item_type_list(self.item_type_list)
         self.priority_list.set_default()
         self.contact_info_book.set_default()
+        self.item_list.set_root()
         self.item_list.set_default()
 
     def load(self):

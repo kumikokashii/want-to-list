@@ -12,7 +12,8 @@ class UIItemList(UITabInNB):
         self.left.grid()
         self.right = UIFrame(self)
         self.right.grid()
-        self.current_list = self.item_list
+        self.current_list = item_list.root
+        self.current_details = None
         self.sort_key = 'name'
 
     def refresh_left(self):
@@ -51,4 +52,7 @@ class UIItemList(UITabInNB):
         for i in range(len(table)):
             for j in range(len(table[i])):
                 table[i][j].grid(row=i, column=j)
+
+    def refresh_right(self):
+        self.right.cleanup()
 
