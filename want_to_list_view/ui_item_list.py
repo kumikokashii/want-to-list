@@ -36,7 +36,9 @@ class UIItemList(UITabInNB):
             row = []
 
             check_button = Checkbutton(self.left)
-            check_button.bind('<Button-1>', lambda event, id=id: self.controller.check_item(id))
+            if is_checked:
+                check_button.select()
+            check_button.bind('<Button-1>', lambda event, id=id: self.controller.toggle_check(id))
             row.append(check_button)
 
             for cell in [name, due_date, priority]:

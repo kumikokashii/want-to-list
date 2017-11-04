@@ -5,9 +5,10 @@ class CTRLItemList():
         self.item_list = organizer.item_list
         self.ui = ui
 
-    def check_item(self, id):
-        # Remove item from organizer
-        self.item_list.remove_elem_by_id(id)
+    def toggle_check(self, id):
+        # Toggle check for item in organizer
+        item = self.item_list.get_elem_by_id(id)
+        item.toggle_check()
 
         # Refresh Item List
         self.ui.item_list.refresh_left()
