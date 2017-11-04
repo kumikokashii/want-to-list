@@ -19,13 +19,12 @@ class Item():
         self.is_checked = is_checked  # boolean
 
     def __str__(self):
-        attribute_names = ['ID', 'Name', 'Type', 'Parent', 'Children', 'Checked', 
-                           'Created Date', 'Due Date', 'Prority', 'Picture', 
-                           'Money', 'Contact Info']
-        attribute_vars = [self.id, self.name, self.item_type, self.parent,
-                          self.children, self.is_checked, 
+        attribute_names = ['ID', 'Name', 'Type', 'Parent', 'Children',
+                           'Created Date', 'Due Date', 'Prority', 'Picture',
+                           'Money', 'Contact Info', 'Checked']
+        attribute_vars = [self.id, self.name, self.item_type, self.parent, self.children,
                           self.created_date, self.due_date, self.priority, self.picture, 
-                          self.money, self.contact_info]
+                          self.money, self.contact_info, self.is_checked]
         output = ''
         for i in range(len(attribute_names)):
             output += attribute_names[i] + ': '
@@ -42,14 +41,14 @@ class Item():
     def short_str(self):
         return str(self.id) + ' ' + self.name
 
+    def change_item_type(self, new_item_type):
+        self.item_type = new_item_type
+
     def change_parent(self, new_parent):
         self.parent = new_parent
 
     def add_child(self, item):
         self.children.append(item)
-
-    def change_item_type(self, new_item_type):
-        self.item_type = new_item_type
 
     def toggle_check(self):
         self.is_checked = not self.is_checked
