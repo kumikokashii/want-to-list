@@ -10,6 +10,15 @@ class IncrementalIDList(list):
             output += '\n'
         return output
 
+    def short_str(self):
+        if len(self) == 0:
+            return 'None'
+
+        output = []
+        for elem in self:
+            output.append(str(elem.id) + ' ' + elem.name)
+        return ', '.join(output)
+
     def copy(self):
         output = IncrementalIDList()
         for elem in self:

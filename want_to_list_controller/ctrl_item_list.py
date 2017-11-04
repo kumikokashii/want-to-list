@@ -18,4 +18,6 @@ class CTRLItemList():
         print(id)
 
         # If item has children, show children on Left
+        
+
         # Show self details on Right
