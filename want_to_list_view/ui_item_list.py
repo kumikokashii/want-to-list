@@ -9,9 +9,9 @@ class UIItemList(UITabInNB):
         super().__init__(parent, tab_name)
         self.item_list = item_list
         self.left = UIFrame(self)
-        self.left.grid()
+        self.left.grid(row=0, column=0)
         self.right = UIFrame(self)
-        self.right.grid()
+        self.right.grid(row=0, column=1)
         self.current_list = item_list.root
         self.current_details = None
         self.sort_key = 'name'
@@ -55,4 +55,52 @@ class UIItemList(UITabInNB):
 
     def refresh_right(self):
         self.right.cleanup()
+
+        item = self.current_details
+        name = item.name
+        created_date = item.created_date
+        due_date = item.due_date
+        priority = item.priority
+        picture = item.picture
+        money = item.money
+        contact_info = item.contact_info
+
+        table = []
+
+        # Name
+        label = Label(self.right, text=name)
+        table.append([label])
+
+        # Due Date
+        label_1 = Label(self.right, text='Due')
+        label_2 = Label(self.right, text=due_date)
+        table.append([label_1, label_2])
+
+        # Priority
+        label = Label(self.right, text=priority)
+        table.append([label])
+
+        # Picture
+        label_1 = Label(self.right, text='Img')
+        label_2 = Label(self.right, text=picture)
+        table.append([label_1, label_2])
+
+        # Money
+        label_1 = Label(self.right, text='Money')
+        label_2 = Label(self.right, text=money)
+        table.append([label_1, label_2])
+        
+        # Contact Info
+        label_1 = Label(self.right, text='Contact Info')
+        label_2 = Label(self.right, text=contact_info)
+        table.append([label_1, label_2])
+
+        # Created Date
+        label_1 = Label(self.right, text='Created on')
+        label_2 = Label(self.right, text=created_date)
+        table.append([label_1, label_2])
+
+        for i in range(len(table)):
+            for j in range(len(table[i])):
+                table[i][j].grid(row=i, column=j)
 
