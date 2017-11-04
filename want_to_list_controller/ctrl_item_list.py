@@ -26,5 +26,5 @@ class CTRLItemList():
             print(self.ui.item_list.current_list)
 
         # Show self details on Right
-        self.ui.item_list.current_details = item
+        self.ui.item_list.current_item = item
         self.ui.item_list.refresh_right()

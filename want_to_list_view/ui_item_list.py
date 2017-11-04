@@ -13,7 +13,7 @@ class UIItemList(UITabInNB):
         self.right = UIFrame(self)
         self.right.grid(row=0, column=1)
         self.current_list = item_list.root
-        self.current_details = None
+        self.current_item = None
         self.sort_key = 'name'
 
     def refresh_left(self):
@@ -56,7 +56,7 @@ class UIItemList(UITabInNB):
     def refresh_right(self):
         self.right.cleanup()
 
-        item = self.current_details
+        item = self.current_item
         name = item.name
         created_date = item.created_date
         due_date = item.due_date
