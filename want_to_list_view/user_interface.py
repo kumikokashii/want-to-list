@@ -24,7 +24,7 @@ class UserInterface(Tk):
         self.priorities.controller = controller.priorities
 
     def initialize(self):
-        self.item_list.refresh_view()
+        self.item_list.refresh_left()
         self.contact_info.refresh_view()
         self.contact_info.initialize_add()
         self.priorities.refresh()

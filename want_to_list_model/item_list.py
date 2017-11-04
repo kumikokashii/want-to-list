@@ -7,6 +7,16 @@ class ItemList(IncrementalIDList):
         super().__init__()
         self.item_type_list = item_type_list
 
+    def get_sorted_by(self, key):
+        if key == 'name':
+            return sorted(self, key=lambda item: item.name)
+        if key == 'created date':
+            return sorted(self, key=lambda item: item.created_date)
+        if key == 'due date':
+            return sorted(self, key=lambda item: item.due_date)
+        if key == 'priority':
+            return sorted(self, key=lambda item: item.priority)
+
     def add_item(self, name, item_type=None, parent_item=None, 
                  due_date=None, priority=None, picture=None, money=0, contact_info=None):
         id = self.get_next_id()
