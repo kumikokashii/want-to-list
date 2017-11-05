@@ -49,6 +49,12 @@ class UIItemList(UITabInNB):
 
             table.append([check_button, label])
 
+        # Add new item
+        add_button = Button(frame, text='+')
+        entry = Entry(frame)
+        add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_item(entry))
+        table.append([add_button, entry])
+
         for i in range(len(table)):
             for j in range(len(table[i])):
                 table[i][j].grid(row=i, column=j)
@@ -90,6 +96,12 @@ class UIItemList(UITabInNB):
             label_1 = Label(frame, text=field)
             label_2 = Label(frame, text=value)
             table.append([label_1, label_2])
+
+        # Add new item
+        add_button = Button(frame, text='+')
+        entry = Entry(frame)
+        add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_child(entry))
+        table.append([add_button, entry])
 
         for i in range(len(table)):
             for j in range(len(table[i])):
