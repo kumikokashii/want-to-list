@@ -3,9 +3,10 @@ from .item_list_element import *
 from datetime import datetime, date
 
 class ItemList(IncrementalIDList):
-    def __init__(self):
+    def __init__(self, item_type_list):
         super().__init__()
         self.set_root()
+        self.item_type_list = item_type_list
 
     def clear(self):
         super().clear()
@@ -20,9 +21,6 @@ class ItemList(IncrementalIDList):
                                money=None, contact_info=None, is_checked=False)
         self.append(item)
         self.root = item
-
-    def set_item_type_list(self, item_type_list):
-        self.item_type_list = item_type_list
 
     def get_sorted_by(self, key):
         if key == 'name':
@@ -53,13 +51,3 @@ class ItemList(IncrementalIDList):
 
         return item
 
-    def set_default(self):
-        self.clear()
-
-        self.add_item(name='Eat', parent=self.get_elem_by_name('Root'), 
-                      is_checked=True, due_date=date(2017, 11, 11))
-        self.add_item(name='Sleep', parent=self.get_elem_by_name('Root'))
-        self.add_item(name='Drink', parent=self.get_elem_by_name('Root'))
-
-        self.add_item(name='Shrimp', parent=self.get_elem_by_name('Eat'))
-        self.add_item(name='Crab', parent=self.get_elem_by_name('Eat'))

@@ -2,6 +2,13 @@ from .incremental_id_list import *
 from .priority import *
 
 class PriorityList(IncrementalIDList):
+    def get_test_instance():
+        priority_list = PriorityList()
+        priority_list.add_priority(name='high', importance=1)
+        priority_list.add_priority(name='normal', importance=2)
+        priority_list.add_priority(name='low', importance=3)
+        return priority_list
+
     def __init__(self):
         super().__init__()
 
@@ -32,8 +39,3 @@ class PriorityList(IncrementalIDList):
                 # If id doesn't exist, create a new priority
                 self.append(Priority(new_id, new_name, new_importance))
 
-    def set_default(self):
-        self.clear()
-        self.add_priority(name='high', importance=1)
-        self.add_priority(name='normal', importance=2)
-        self.add_priority(name='low', importance=3)

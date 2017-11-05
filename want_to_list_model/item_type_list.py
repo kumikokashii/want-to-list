@@ -10,8 +10,9 @@ class ItemTypeList(IncrementalIDList):
         item_type = ItemType(id, name)
         self.append(item_type)
 
-    def set_default(self):
-        self.clear()
-        self.add_item_type('check')
-        self.add_item_type('note')
+    def get_default():
+        item_type_list = ItemTypeList()
+        item_type_list.add_item_type('check')
+        item_type_list.add_item_type('note')
+        return item_type_list
 

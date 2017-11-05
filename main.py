@@ -2,9 +2,12 @@ from want_to_list_model import *
 from want_to_list_view import *
 from want_to_list_controller import *
 
-organizer = Organizer()
+organizer = Organizer.get_test_instance()
+
+# If use pickle:
 #organizer = organizer.load()
-organizer.load_default()
+# If start fresh:
+#organizer = Organizer()
 
 print(organizer)
 
