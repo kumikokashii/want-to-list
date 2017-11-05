@@ -5,9 +5,21 @@ from datetime import datetime, date
 class ItemList(IncrementalIDList):
     def __init__(self):
         super().__init__()
+        self.set_root()
+
+    def clear(self):
+        super().clear()
+        self.set_root()
 
     def set_root(self):
-        self.root = self.add_item(name='Root', parent=self)
+        id = self.get_next_id()
+        created_date = datetime.today()
+
+        item = ItemListElement(id=id, name='Root', item_type=None, parent=None, 
+                               created_date=created_date, due_date=None, priority=None, picture=None, 
+                               money=None, contact_info=None, is_checked=False)
+        self.append(item)
+        self.root = item
 
     def set_item_type_list(self, item_type_list):
         self.item_type_list = item_type_list
@@ -27,6 +39,7 @@ class ItemList(IncrementalIDList):
                  contact_info=None, is_checked=False):
 
         id = self.get_next_id()
+        print(name, id)
         created_date = datetime.today()
         if item_type is None:
             item_type = self.item_type_list.get_elem_by_name('check')

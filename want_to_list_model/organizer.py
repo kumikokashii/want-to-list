@@ -33,7 +33,6 @@ class Organizer():
         self.item_list.set_item_type_list(self.item_type_list)
         self.priority_list.set_default()
         self.contact_info_book.set_default()
-        self.item_list.set_root()
         self.item_list.set_default()
 
     def load(self):
