@@ -1,5 +1,7 @@
 from datetime import datetime, date
 
+from str_vars import *
+
 class CTRLItemList():
     def __init__(self, organizer, ui):
         self.item_list = organizer.item_list
@@ -53,31 +55,31 @@ class CTRLItemList():
         item = self.item_list.get_elem_by_id(id)
 
         # Name
-        name = values['Name']
+        name = values[name_]
         item.update_name(name)
 
         # Due Date
-        date_dict = values['Due']
+        date_dict = values[due_date_]
         if date_dict is None:
             due_date = None
         else:
-            due_date = date(date_dict['Year'], date_dict['Month'], date_dict['Day'])
+            due_date = date(date_dict[year_], date_dict[month_], date_dict[day_])
         item.update_due_date(due_date)
 
         # Priority
-        priority_name = values['Priority']
+        priority_name = values[priority_]
         priority = self.priority_list.get_elem_by_name(priority_name)
         item.update_priority(priority)
 
         # Picture
-        #item.picture = values['Img']
+        #item.picture = values[picture_]
 
         # Money
-        amount = values['Money']
+        amount = values[money_]
         item.update_money_amount(amount)
 
         # Contact Info
-        contact_info_name = values['Contact Info']
+        contact_info_name = values[contact_info_]
         contact_info = self.contact_info_book.get_elem_by_name(contact_info_name)
         item.update_contact_info(contact_info)
 

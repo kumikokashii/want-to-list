@@ -2,6 +2,7 @@
 from tkinter import *
 from tkinter import ttk
 
+from str_vars import *
 from .ui_tab_in_notebook import *
 
 class UIItemList(UITabInNB):
@@ -18,27 +19,14 @@ class UIItemList(UITabInNB):
         self.current_item = self.item_list.root
         self.sort_key = 'name'
 
-        self._none_str = '-' 
-        self._name = 'Name'
-        self._due_date = 'Due'
-        self._priority = 'Priority'
-        self._picture = 'Img'
-        self._money = 'Money'
-        self._contact_info = 'Contact Info'
-        self._created_date = 'Created on'
-
-        self._month = 'Month'
-        self._day = 'Day'
-        self._year = 'Year'
-
     def get_item_dict(self, item):
-        item_dict = {self._name: item.name,
-                     self._due_date: item.due_date,
-                     self._priority: item.priority,
-                     self._picture: item.picture,
-                     self._money: item.money,
-                     self._contact_info: item.contact_info,
-                     self._created_date: item.created_date}
+        item_dict = {name_: item.name,
+                     due_date_: item.due_date,
+                     priority_: item.priority,
+                     picture_: item.picture,
+                     money_: item.money,
+                     contact_info_: item.contact_info,
+                     created_date_: item.created_date}
         return item_dict
         
     def refresh_left(self):
@@ -93,22 +81,22 @@ class UIItemList(UITabInNB):
 
         item = self.current_item
         item_dict = self.get_item_dict(item)
-        format_dict = {self._due_date: (lambda due_date: '{:%a, %b %-d, %Y}'.format(due_date)),
-                       self._priority: (lambda priority: priority.name),
-                       self._money: (lambda money: str(money)),
-                       self._contact_info: (lambda contact_info: contact_info.block_str()),
-                       self._created_date: (lambda created_date: '{:%-m/%-d/%Y %-I:%M%p}'.format(created_date))}
+        format_dict = {due_date_: (lambda due_date: '{:%a, %b %-d, %Y}'.format(due_date)),
+                       priority_: (lambda priority: priority.name),
+                       money_: (lambda money: str(money)),
+                       contact_info_: (lambda contact_info: contact_info.block_str()),
+                       created_date_: (lambda created_date: '{:%-m/%-d/%Y %-I:%M%p}'.format(created_date))}
 
         table = []
 
         # Name & Edit button
-        label = Label(frame, text=item_dict[self._name])
+        label = Label(frame, text=item_dict[name_])
         edit_button = Button(frame, text='Edit me')
         edit_button.bind('<Button-1>', lambda event: self.to_edit_mode())
         table.append([label, edit_button])
 
         # Details
-        for field in [self._due_date, self._priority, self._picture, self._money, self._contact_info, self._created_date]:
+        for field in [due_date_, priority_, picture_, money_, contact_info_, created_date_]:
             content = item_dict[field]
             if content is None:
                 continue
@@ -138,13 +126,13 @@ class UIItemList(UITabInNB):
         form_dict, widget_dict = self.get_form_dict(self.right, self.current_item)
         update_button = Button(frame, text='Update!', command=(lambda id=self.current_item.id, form_dict=form_dict: self.controller.update_item(id, values=self.get_update_item_values(form_dict))))
 
-        table = [[label[self._name], widget_dict[self._name]],
-                 [label[self._due_date], widget_dict[self._due_date][self._month],
-                  widget_dict[self._due_date][self._day], widget_dict[self._due_date][self._year]],
-                 [label[self._priority], widget_dict[self._priority]],
-                 # [label[self._picture], widget_dict[self._picture]],
-                 [label[self._money], widget_dict[self._money]],
-                 [label[self._contact_info], widget_dict[self._contact_info]],
+        table = [[label[name_], widget_dict[name_]],
+                 [label[due_date_], widget_dict[due_date_][month_],
+                  widget_dict[due_date_][day_], widget_dict[due_date_][year_]],
+                 [label[priority_], widget_dict[priority_]],
+                 # [label[picture_], widget_dict[picture_]],
+                 [label[money_], widget_dict[money_]],
+                 [label[contact_info_], widget_dict[contact_info_]],
                  [update_button]]
 
         for i in range(len(table)):
@@ -153,7 +141,7 @@ class UIItemList(UITabInNB):
 
     def get_label_dict(self, frame):
         label = {}
-        for field in [self._name, self._due_date, self._priority, self._picture, self._money, self._contact_info]:
+        for field in [name_, due_date_, priority_, picture_, money_, contact_info_]:
             label[field] = Label(frame, text=field)
         return label
 
@@ -165,17 +153,17 @@ class UIItemList(UITabInNB):
 
         # Name
         entry = Entry(frame)
-        entry.insert(0, item_dict[self._name])
+        entry.insert(0, item_dict[name_])
 
-        form_dict[self._name] = entry
-        widget_dict[self._name] =entry
+        form_dict[name_] = entry
+        widget_dict[name_] =entry
 
         # Due Date
         entry_1 = Entry(frame)
         entry_2 = Entry(frame)
         entry_3 = Entry(frame)
 
-        due_date = item_dict[self._due_date]
+        due_date = item_dict[due_date_]
         if due_date is None:
             for entry in [entry_1, entry_2, entry_3]:
                 entry.insert(0, '')
@@ -184,52 +172,52 @@ class UIItemList(UITabInNB):
             entry_2.insert(0, due_date.day)
             entry_3.insert(0, due_date.year)
 
-        form_dict[self._due_date] = {self._month: entry_1, self._day: entry_2, self._year: entry_3}
-        widget_dict[self._due_date] = {self._month: entry_1, self._day: entry_2, self._year: entry_3}
+        form_dict[due_date_] = {month_: entry_1, day_: entry_2, year_: entry_3}
+        widget_dict[due_date_] = {month_: entry_1, day_: entry_2, year_: entry_3}
 
         # Priority
-        priorities = [self._none_str]
+        priorities = [none_str_]
         for priority in self.priority_list:
             priorities.append(priority.name)
         
         variable = StringVar(frame)
-        if item_dict[self._priority] is None:
-            variable.set(self._none_str)
+        if item_dict[priority_] is None:
+            variable.set(none_str_)
         else:
-            variable.set(item_dict[self._priority].name)
+            variable.set(item_dict[priority_].name)
 
         option_menu = OptionMenu(frame, variable, *priorities)
 
-        form_dict[self._priority] = variable
-        widget_dict[self._priority] = option_menu
+        form_dict[priority_] = variable
+        widget_dict[priority_] = option_menu
 
         # Image
-        #form_dict[self._picture] = None
-        #widget_dict[self._picture] = None 
+        #form_dict[picture_] = None
+        #widget_dict[picture_] = None 
 
         # Money
         entry = Entry(frame)
-        if item_dict[self._money] is not None:
-            entry.insert(0, item_dict[self._money].amount)
+        if item_dict[money_] is not None:
+            entry.insert(0, item_dict[money_].amount)
 
-        form_dict[self._money] = entry
-        widget_dict[self._money] = entry
+        form_dict[money_] = entry
+        widget_dict[money_] = entry
 
         # Contact Info
-        contact_infos = [self._none_str]
+        contact_infos = [none_str_]
         for contact_info in self.contact_info_book:
             contact_infos.append(contact_info.name)
 
         variable = StringVar(frame)
-        if item_dict[self._contact_info] is None:
-            variable.set(self._none_str)
+        if item_dict[contact_info_] is None:
+            variable.set(none_str_)
         else:
-            variable.set(item_dict[self._contact_info].name)
+            variable.set(item_dict[contact_info_].name)
 
         option_menu = OptionMenu(frame, variable, *contact_infos)
 
-        form_dict[self._contact_info] = variable
-        widget_dict[self._contact_info] = option_menu
+        form_dict[contact_info_] = variable
+        widget_dict[contact_info_] = option_menu
 
         return form_dict, widget_dict
 
@@ -237,31 +225,31 @@ class UIItemList(UITabInNB):
         values = {}
 
         # Name
-        values[self._name] = form_dict[self._name].get()
+        values[name_] = form_dict[name_].get()
 
         # Due Date
-        values[self._due_date] = {}
-        for part in [self._month, self._day, self._year]:
-            input = form_dict[self._due_date][part].get()
+        values[due_date_] = {}
+        for part in [month_, day_, year_]:
+            input = form_dict[due_date_][part].get()
             if input == '':
-                values[self._due_date] = None
+                values[due_date_] = None
                 break
-            values[self._due_date][part] = int(input)
+            values[due_date_][part] = int(input)
 
         # Priority
-        values[self._priority] = form_dict[self._priority].get()
+        values[priority_] = form_dict[priority_].get()
 
         # Image
         #
 
         # Money
-        input = form_dict[self._money].get()
+        input = form_dict[money_].get()
         if input == '':
-            values[self._money] = None
+            values[money_] = None
         else:
-            values[self._money] = int(input)
+            values[money_] = int(input)
 
         # Contact Info
-        values[self._contact_info] = form_dict[self._contact_info].get()
+        values[contact_info_] = form_dict[contact_info_].get()
 
         return values
