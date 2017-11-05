@@ -30,8 +30,7 @@ class CTRLItemList():
         self.ui.current_item = item
         self.ui.refresh_right()
 
-    def add_item(self, entry):
-        name = entry.get()
+    def add_item(self, name):
         parent = self.ui.current_list
         item = self.item_list.add_item(name=name, parent=parent)
 
@@ -39,8 +38,7 @@ class CTRLItemList():
         self.ui.current_item = item
         self.ui.refresh_right()
 
-    def add_child(self, entry):
-        name = entry.get()
+    def add_child(self, name):
         parent = self.ui.current_item
         item = self.item_list.add_item(name=name, parent=parent)
 
