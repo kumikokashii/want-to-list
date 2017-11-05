@@ -56,7 +56,7 @@ class ItemList(IncrementalIDList):
     def remove_contact_info(self, id):
         contact_info = self.contact_info_book.get_elem_by_id(id)        
         for item in self:
-            if item.contact_info == contact_info:
+            if item.contact_info is contact_info:
                 item.contact_info = None
 
 

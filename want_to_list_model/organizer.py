@@ -11,9 +11,6 @@ class Organizer():
     def get_test_instance():
         organizer = Organizer()
 
-        organizer.priority_list = PriorityList.get_test_instance()
-        organizer.contact_info_book = ContactInfoBook.get_test_instance()
-
         l = organizer.item_list
         l.add_item(name='Eat', due_date=date(2017, 11, 11))
         l.add_item(name='Sleep', priority=organizer.priority_list.get_elem_by_id(0))
@@ -32,8 +29,8 @@ class Organizer():
 
     def __init__(self):
         self.item_type_list = ItemTypeList.get_default()
-        self.priority_list = PriorityList()
-        self.contact_info_book = ContactInfoBook()
+        self.priority_list = PriorityList.get_test_instance()
+        self.contact_info_book = ContactInfoBook.get_test_instance()
         self.item_list = ItemList(self.item_type_list, self.priority_list, self.contact_info_book)
 
     def __str__(self):
