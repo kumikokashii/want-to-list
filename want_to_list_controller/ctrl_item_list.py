@@ -15,16 +15,18 @@ class CTRLItemList():
         #self.ui.item_list.refresh_right()
 
     def onclick_item(self, id):
-        print(id)
-
         item = self.item_list.get_elem_by_id(id)
 
         # If there are children items, show them on Left
         if len(item) > 0:
             self.ui.item_list.current_list = item
             self.ui.item_list.refresh_left()
-            print(self.ui.item_list.current_list)
 
         # Show self details on Right
+        self.ui.item_list.current_item = item
+        self.ui.item_list.refresh_right()
+
+    def onclick_title(self, id):
+        item = self.item_list.get_elem_by_id(id)
         self.ui.item_list.current_item = item
         self.ui.item_list.refresh_right()

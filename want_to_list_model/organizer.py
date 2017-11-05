@@ -3,6 +3,8 @@ from .priority_list import *
 from .contact_info_book import *
 from .item_list import *
 
+from .money import *
+
 import pickle
 
 class Organizer():
@@ -12,10 +14,19 @@ class Organizer():
         organizer.priority_list = PriorityList.get_test_instance()
         organizer.contact_info_book = ContactInfoBook.get_test_instance()
 
-        organizer.item_list.add_item(name='Eat')
-        organizer.item_list.add_item(name='Sleep')
-        organizer.item_list.add_item(name='Drink')
-        organizer.item_list.add_item(name='Talk')
+        l = organizer.item_list
+        l.add_item(name='Eat', due_date=date(2017, 11, 11))
+        l.add_item(name='Sleep', priority=organizer.priority_list.get_elem_by_id(0))
+        l.add_item(name='Drink')
+        l.add_item(name='Talk', contact_info=organizer.contact_info_book.get_elem_by_id(0))
+        l.add_item(name='Walk', is_checked=True)
+        l.add_item(name='Shrimp', parent=l.get_elem_by_name('Eat'))
+        l.add_item(name='Crab', parent=l.get_elem_by_name('Eat'))
+        l.add_item(name='Lobster', parent=l.get_elem_by_name('Eat'))
+        l.add_item(name='Michelada', parent=l.get_elem_by_name('Drink'), money=Money(3.50))
+        l.add_item(name='Sake', parent=l.get_elem_by_name('Drink'), money=Money(27))
+        l.add_item(name='Hot Sake', parent=l.get_elem_by_name('Sake'), money=Money(11))
+        l.add_item(name='Cold Sake', parent=l.get_elem_by_name('Sake'), money=Money(12.3))
 
         return organizer
 

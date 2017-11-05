@@ -13,7 +13,7 @@ class UIItemList(UITabInNB):
         self.right = UIFrame(self)
         self.right.grid(row=0, column=1)
         self.current_list = item_list.root
-        self.current_item = None
+        self.current_item = item_list.root
         self.sort_key = 'name'
 
     def refresh_left(self):
@@ -24,8 +24,13 @@ class UIItemList(UITabInNB):
 
         # List name
         if self.current_list.id != 0:  # If not top level
-            label = Label(frame, text=self.current_list.name)
-            table.append([label])
+            parent_id = self.current_list.parent.id
+            label_1 = Label(frame, text='^')
+            label_1.bind('<Button-1>', lambda event, id=parent_id: self.controller.onclick_item(id))
+
+            label_2 = Label(frame, text=self.current_list.name)
+            label_2.bind('<Button-1>', lambda event, id=self.current_list.id: self.controller.onclick_title(id))
+            table.append([label_1, label_2])
 
         # Items
         sorted = self.current_list.get_sorted_by(self.sort_key)
@@ -51,6 +56,9 @@ class UIItemList(UITabInNB):
     def refresh_right(self):
         frame = self.right
         frame.cleanup()
+
+        if self.current_item.id == 0:  # If top level
+            return
 
         item = self.current_item
         item_dict = {'Due': item.due_date,
