@@ -1,3 +1,4 @@
+from .money import *
 
 class ItemListElement(list):
     def __init__(self, id, name, item_type, parent,
@@ -56,11 +57,27 @@ class ItemListElement(list):
         if key == 'priority':
             return sorted(self, key=lambda item: item.priority)
 
-    def change_item_type(self, new_item_type):
-        self.item_type = new_item_type
+    def update_name(self, name):
+        self.name = name
 
-    def change_parent(self, new_parent):
-        self.parent = new_parent
+    def update_due_date(self, due_date):
+        self.due_date = due_date
+
+    def update_priority(self, priority):
+        self.priority = priority
+
+    def update_money_amount(self, amount):
+        if amount is None:
+            self.money = None
+            return
+
+        if self.money is None:
+            self.money = Money(amount)
+        else:
+            self.money.amount = amount
+
+    def update_contact_info(self, contact_info):
+        self.contact_info = contact_info
 
     def toggle_check(self):
         self.is_checked = not self.is_checked

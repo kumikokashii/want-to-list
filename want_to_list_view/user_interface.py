@@ -13,7 +13,7 @@ class UserInterface(Tk):
         self.nb = ttk.Notebook(self)
         self.nb.grid()  # Need to specify parameters???
         
-        self.item_list = UIItemList(parent=self.nb, tab_name='Item List', item_list=organizer.item_list)
+        self.item_list = UIItemList(parent=self.nb, tab_name='Item List', organizer=organizer) 
         self.contact_info = UIContactInfo(parent=self.nb, tab_name='Contact Info', contact_info_book=organizer.contact_info_book)
         self.priorities = UIPriorities(parent=self.nb, tab_name='Priorities', priority_list=organizer.priority_list)
 
