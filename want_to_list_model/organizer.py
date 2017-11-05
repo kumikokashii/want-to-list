@@ -34,7 +34,7 @@ class Organizer():
         self.item_type_list = ItemTypeList.get_default()
         self.priority_list = PriorityList()
         self.contact_info_book = ContactInfoBook()
-        self.item_list = ItemList(self.item_type_list)
+        self.item_list = ItemList(self.item_type_list, self.priority_list, self.contact_info_book)
 
     def __str__(self):
         output = ''

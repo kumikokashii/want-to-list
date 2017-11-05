@@ -3,7 +3,7 @@ from want_to_list_model import *
 
 class CTRLContactInfo():
     def __init__(self, organizer, ui):
-        self.organizer = organizer
+        self.item_list = organizer.item_list
         self.contact_info_book = organizer.contact_info_book
         self.ui = ui
 
@@ -28,17 +28,14 @@ class CTRLContactInfo():
         # Go to Contact Info View
         pass
 
-    def get_remove_by_id_func(self, id):
-        def remove():
-            self.remove(id)
-        return remove
-
     def remove(self, id):
         # Remove contact info from organizer
         self.contact_info_book.remove_elem_by_id(id)
+        self.item_list.remove_contact_info(id)
 
         # Refresh Contact Info View
         self.ui.contact_info.refresh_view()
 
-        # Refresh Item List View and Item List Add
-        pass
+        # Refresh Item List 
+        self.ui.item_list.refresh_left()
+        self.ui.item_list.refresh_right()

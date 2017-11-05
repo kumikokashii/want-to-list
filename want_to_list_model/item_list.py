@@ -3,10 +3,12 @@ from .item_list_element import *
 from datetime import datetime, date
 
 class ItemList(IncrementalIDList):
-    def __init__(self, item_type_list):
+    def __init__(self, item_type_list, priority_list, contact_info_book):
         super().__init__()
         self.set_root()
         self.item_type_list = item_type_list
+        self.priority_list = priority_list
+        self.contact_info_book = contact_info_book
 
     def clear(self):
         super().clear()
@@ -50,4 +52,12 @@ class ItemList(IncrementalIDList):
         parent.append(item)
 
         return item
+
+    def remove_contact_info(self, id):
+        contact_info = self.contact_info_book.get_elem_by_id(id)        
+        for item in self:
+            if item.contact_info == contact_info:
+                item.contact_info = None
+
+
 

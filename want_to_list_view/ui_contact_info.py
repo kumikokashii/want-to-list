@@ -2,6 +2,7 @@
 from tkinter import *
 from tkinter import ttk
 
+from str_vars import *
 from .ui_tab_in_notebook import *
 
 class UIContactInfo(UITabInNB):
@@ -15,28 +16,28 @@ class UIContactInfo(UITabInNB):
         self.add = UITabInNB(parent=self.nb, tab_name='Add')
 
     def refresh_view(self):
-        self.view.cleanup()
+        frame = self.view
+        frame.cleanup()
 
-        table = []
+        header = []
+        for field in [name_, phone_, address_, 'Remove']:
+            header.append(Label(frame, text=field))
 
-        row = []
-        for header in ['Name', 'Phone', 'Address', 'Remove']:
-            row.append(Label(self.view, text=header)) 
-        table.append(row)
-
+        contact_infos = []
         for contact_info in self.contact_info_book:
             id = contact_info.id
             name = contact_info.name
             phone = contact_info.phone
             address = contact_info.address
 
-            row = []
-            for cell in [name, phone, address]:
-                row.append(Label(self.view, text=cell))
-            remove_by_id = self.controller.get_remove_by_id_func(id)
-            x_button = Button(self.view, text='X', command=remove_by_id)
-            row.append(x_button)
-            table.append(row)
+            contact_info = []
+            for text in [name, phone, address]:
+                contact_info.append(Label(frame, text=text))
+            x_button = Button(frame, text=remove_str_, command=(lambda id=id: self.controller.remove(id)))
+            contact_info.append(x_button)
+            contact_infos.append(contact_info)
+
+        table = [header] + contact_infos
 
         for i in range(len(table)):
             for j in range(len(table[i])):
