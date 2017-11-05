@@ -35,11 +35,10 @@ class ItemList(IncrementalIDList):
             return sorted(self, key=lambda item: item.priority)
 
     def add_item(self, name, item_type=None, parent=None, 
-                 due_date=None, priority=None, picture=None, money=0, 
+                 due_date=None, priority=None, picture=None, money=None, 
                  contact_info=None, is_checked=False):
 
         id = self.get_next_id()
-        print(name, id)
         created_date = datetime.today()
         if item_type is None:
             item_type = self.item_type_list.get_elem_by_name('check')

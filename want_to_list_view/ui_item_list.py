@@ -17,88 +17,71 @@ class UIItemList(UITabInNB):
         self.sort_key = 'name'
 
     def refresh_left(self):
-        self.left.cleanup() 
+        frame = self.left
+        frame.cleanup() 
 
         table = []
 
-        row = []
-        for header in ['Check', 'Name', 'Due Date', 'Priority']:
-            row.append(Label(self.left, text=header))
-        table.append(row)
+        # List name
+        if self.current_list.id != 0:  # If not top level
+            label = Label(frame, text=self.current_list.name)
+            table.append([label])
 
+        # Items
         sorted = self.current_list.get_sorted_by(self.sort_key)
         for item in sorted:
             id = item.id
             is_checked = item.is_checked
             name = item.name
-            due_date = item.due_date
-            priority = item.priority
 
-            row = []
-
-            check_button = Checkbutton(self.left)
+            check_button = Checkbutton(frame)
             if is_checked:
                 check_button.select()
             check_button.bind('<Button-1>', lambda event, id=id: self.controller.toggle_check(id))
-            row.append(check_button)
 
-            for cell in [name, due_date, priority]:
-                label = Label(self.left, text=cell)
-                label.bind('<Button-1>', lambda event, id=id: self.controller.onclick_item(id))
-                row.append(label)
+            label = Label(frame, text=name)
+            label.bind('<Button-1>', lambda event, id=id: self.controller.onclick_item(id))
 
-            table.append(row)
+            table.append([check_button, label])
 
         for i in range(len(table)):
             for j in range(len(table[i])):
                 table[i][j].grid(row=i, column=j)
 
     def refresh_right(self):
-        self.right.cleanup()
+        frame = self.right
+        frame.cleanup()
 
         item = self.current_item
-        name = item.name
-        created_date = item.created_date
-        due_date = item.due_date
-        priority = item.priority
-        picture = item.picture
-        money = item.money
-        contact_info = item.contact_info
+        item_dict = {'Due': item.due_date,
+                     'Priority': item.priority,
+                     'Img': item.picture,
+                     'Money': item.money,
+                     'Contact Info': item.contact_info,
+                     'Created on': item.created_date} 
+        format_dict = {'Due': (lambda due_date: '{:%a, %b %-d, %Y}'.format(due_date)),
+                       'Priority': (lambda priority: priority.name),
+                       'Money': (lambda money: str(money)),
+                       'Contact Info': (lambda contact_info: str(contact_info)),
+                       'Created on': (lambda created_date: '{:%-m/%-d/%Y %-I:%M%p}'.format(created_date))}
 
         table = []
 
         # Name
-        label = Label(self.right, text=name)
+        label = Label(self.right, text=item.name)
         table.append([label])
 
-        # Due Date
-        label_1 = Label(self.right, text='Due')
-        label_2 = Label(self.right, text=due_date)
-        table.append([label_1, label_2])
+        # Details
+        for field in ['Due', 'Priority', 'Img', 'Money', 'Contact Info', 'Created on']:
+            content = item_dict[field]
+            if content is None:
+                continue
 
-        # Priority
-        label = Label(self.right, text=priority)
-        table.append([label])
-
-        # Picture
-        label_1 = Label(self.right, text='Img')
-        label_2 = Label(self.right, text=picture)
-        table.append([label_1, label_2])
-
-        # Money
-        label_1 = Label(self.right, text='Money')
-        label_2 = Label(self.right, text=money)
-        table.append([label_1, label_2])
-        
-        # Contact Info
-        label_1 = Label(self.right, text='Contact Info')
-        label_2 = Label(self.right, text=contact_info)
-        table.append([label_1, label_2])
-
-        # Created Date
-        label_1 = Label(self.right, text='Created on')
-        label_2 = Label(self.right, text=created_date)
-        table.append([label_1, label_2])
+            format = format_dict[field]
+            value = format(content)
+            label_1 = Label(frame, text=field)
+            label_2 = Label(frame, text=value)
+            table.append([label_1, label_2])
 
         for i in range(len(table)):
             for j in range(len(table[i])):
