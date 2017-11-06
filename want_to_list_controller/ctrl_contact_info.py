@@ -1,4 +1,4 @@
-
+from str_vars import *
 from want_to_list_model import *
 
 class CTRLContactInfo():
@@ -7,23 +7,16 @@ class CTRLContactInfo():
         self.contact_info_book = organizer.contact_info_book
         self.ui = ui
 
-    def format_entries(self, entries):
-        contact_info = {}
-        for field, input in entries.items():
-            contact_info[field] = input.get()
-
-        name = contact_info['name']
-        phone = Phone(contact_info['phone'])
-        address = Address(contact_info['street address'], contact_info['city'], contact_info['state'], contact_info['zip code'])
-        return name, phone, address 
-
-    def add(self, entries):
+    def add(self, values):
         # Add new contact info to organizer
-        name, phone, address = self.format_entries(entries)
+        name = values[name_]
+        phone = Phone(values[phone_])
+        address = Address(values[street_address_], values[city_], values[state_], values[zip_code_])
         self.contact_info_book.add_contact_info(name=name, phone=phone, address=address)
 
-        # Refresh Contact Info View
+        # Refresh Contact Info View & Add
         self.ui.contact_info.refresh_view()
+        self.ui.contact_info.refresh_add()
 
         # Go to Contact Info View
         pass

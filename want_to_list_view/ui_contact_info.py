@@ -43,33 +43,39 @@ class UIContactInfo(UITabInNB):
             for j in range(len(table[i])):
                 table[i][j].grid(row=i, column=j)
 
-    def initialize_add(self):
-        table = [['Name', -1, None], 
-                 ['Phone', -1, '10 digits'], 
-                 ['Address', -1, 'Street Address'], 
-                 [None, -1, 'City'], 
-                 [None, -1, 'State'], 
-                 [None, -1, 'Zip Code']]
+    def refresh_add(self):
+        frame = self.add
+        frame.cleanup()
 
-        fields = ['name', 'phone', 'street address', 'city', 'state', 'zip code']
-        inputs = []
+        label = self.get_label_dict(frame, [name_, phone_, phone_exp_, address_,
+                                            street_address_, city_, state_, zip_code_])
+        form_dict = {}
+        for field in [name_, phone_, street_address_, city_, state_, zip_code_]:
+            form_dict[field] = Entry(frame)
+
+        button = Button(self.add, text='Add ^_^', 
+                        command=(lambda form_dict=form_dict:
+                                 self.controller.add(self.get_add_values(form_dict))))
+
+        table = [[label[name_], form_dict[name_]],
+                 [label[phone_], form_dict[phone_], label[phone_exp_]],
+                 [label[address_], form_dict[street_address_], label[street_address_]],
+                 [None, form_dict[city_], label[city_]],
+                 [None, form_dict[state_], label[state_]],
+                 [None, form_dict[zip_code_], label[zip_code_]],
+                 [None, button]]
+
         for i in range(len(table)):
             for j in range(len(table[i])):
-                elem = table[i][j]
-                if elem is None:
+                if table[i][j] is None:
                     continue
-                if elem == -1:
-                    cell = Entry(self.add)
-                    inputs.append(cell)
-                else:    
-                    cell = Label(self.add, text=elem)
-                cell.grid(row=i, column=j)
+                table[i][j].grid(row=i, column=j)
 
-        entries = {}
-        for i in range(len(fields)):
-            field = fields[i]
-            input = inputs[i]
-            entries[field] = input
+    def get_add_values(self, form_dict):
+        values = {}
+        for field, entry in form_dict.items():
+            values[field] = entry.get()
+        return values
 
-        button = Button(self.add, text='Add ^_^', command=(lambda: self.controller.add(entries)))
-        button.grid(row=len(table), column=1)
+
+

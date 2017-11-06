@@ -1,4 +1,5 @@
 
+from tkinter import *
 from tkinter import ttk
 
 class UIFrame(ttk.Frame):
@@ -8,6 +9,12 @@ class UIFrame(ttk.Frame):
     def cleanup(self):
         for widget in self.winfo_children():
             widget.destroy()
+
+    def get_label_dict(self, frame, text_list):
+        label = {}
+        for text in text_list:
+            label[text] = Label(frame, text=text)
+        return label
 
 class UITabInNB(UIFrame):
     def __init__(self, parent, tab_name):

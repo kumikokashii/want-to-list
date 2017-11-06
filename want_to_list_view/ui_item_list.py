@@ -122,9 +122,11 @@ class UIItemList(UITabInNB):
         frame = self.right
         frame.cleanup()
 
-        label = self.get_label_dict(self.right) 
+        label = self.get_label_dict(frame, [name_, due_date_, priority_, picture_, money_, contact_info_]) 
         form_dict, widget_dict = self.get_form_dict(self.right, self.current_item)
-        update_button = Button(frame, text='Update!', command=(lambda id=self.current_item.id, form_dict=form_dict: self.controller.update_item(id, values=self.get_update_item_values(form_dict))))
+        update_button = Button(frame, text='Update!',
+                               command=(lambda id=self.current_item.id, form_dict=form_dict:
+                                        self.controller.update_item(id, values=self.get_update_item_values(form_dict))))
 
         table = [[label[name_], widget_dict[name_]],
                  [label[due_date_], widget_dict[due_date_][month_],
@@ -138,12 +140,6 @@ class UIItemList(UITabInNB):
         for i in range(len(table)):
             for j in range(len(table[i])):
                 table[i][j].grid(row=i, column=j)
-
-    def get_label_dict(self, frame):
-        label = {}
-        for field in [name_, due_date_, priority_, picture_, money_, contact_info_]:
-            label[field] = Label(frame, text=field)
-        return label
 
     def get_form_dict(self, frame, item):
         item_dict = self.get_item_dict(item)

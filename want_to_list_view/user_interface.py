@@ -26,6 +26,6 @@ class UserInterface(Tk):
     def initialize(self):
         self.item_list.refresh_left()
         self.contact_info.refresh_view()
-        self.contact_info.initialize_add()
+        self.contact_info.refresh_add()
         self.priorities.refresh()
 
