@@ -243,7 +243,7 @@ class UIItemList(UITabInNB):
         if input == '':
             values[money_] = None
         else:
-            values[money_] = int(input)
+            values[money_] = float(input)
 
         # Contact Info
         values[contact_info_] = form_dict[contact_info_].get()

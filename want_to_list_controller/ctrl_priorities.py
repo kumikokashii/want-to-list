@@ -1,41 +1,27 @@
 
 class CTRLPriorities():
     def __init__(self, organizer, ui):
-        self.organizer = organizer
+        self.item_list = organizer.item_list
         self.priority_list = organizer.priority_list
         self.ui = ui
 
-    def format_entries(self, entries):
-        new_list = []
-        for id, name_importance_entries in entries.items():
-            name_entry, importance_entry = name_importance_entries
-            name = name_entry.get()
-            importance = importance_entry.get()
-            if id == -1:
-                # New priority row
-                if (name == '') or (importance == ''):
-                    continue
-                else:
-                    id = self.priority_list.get_next_id()
-            new_list.append((id, name, importance))
-        return new_list
+    def edit(self, values):
+        # Update priority in organizer
+        self.priority_list.edit(values)
 
-    def edit(self, entries):
-        new_list = self.format_entries(entries)
-        self.priority_list.edit(new_list)
-        self.ui.priorities.refresh()
-
-    def get_remove_by_id_func(self, id):
-        def remove():
-            self.remove(id)
-        return remove
+        self.refresh_ui()
 
     def remove(self, id):
         # Remove priority from organizer
+        self.item_list.remove_priority(id)
         self.priority_list.remove_elem_by_id(id)
 
+        self.refresh_ui()
+
+    def refresh_ui(self):
         # Refresh Priorities
         self.ui.priorities.refresh()
 
-        # Refresh Item List View and Item List Add
-        pass
+        # Refresh Item List
+        self.ui.item_list.refresh_right()
+

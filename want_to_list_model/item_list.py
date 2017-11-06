@@ -59,5 +59,10 @@ class ItemList(IncrementalIDList):
             if item.contact_info is contact_info:  # is checkes references pointed. == checks values.
                 item.contact_info = None
 
+    def remove_priority(self, id):
+        priority = self.priority_list.get_elem_by_id(id)        
+        for item in self:
+            if item.priority is priority:  # is checkes references pointed. == checks values.
+                item.priority = None
 
 

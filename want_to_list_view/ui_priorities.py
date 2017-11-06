@@ -2,6 +2,7 @@
 from tkinter import *
 from tkinter import ttk
 
+from str_vars import *
 from .ui_tab_in_notebook import *
 
 class UIPriorities(UITabInNB):
@@ -12,43 +13,59 @@ class UIPriorities(UITabInNB):
     def refresh(self):
         self.cleanup()
 
-        table = []
-
-        row = []
-        for header in ['Name', 'Importance', 'Remove']:
-            row.append(Label(self, text=header)) 
-        table.append(row)
-
-        entries = {}
+        header = ['Name', 'Importance', 'Remove']
+        label = self.get_label_dict(self, header)
+        header_label = [label[h] for h in header]
 
         sorted = self.priority_list.get_sorted_by_importance()
-        for priority in sorted:
-            id = priority.id
-            name = priority.name
-            importance = priority.importance
+        n = len(sorted)
 
-            name_importance_entries = []
-            for cell in [name, importance]:
-                entry = Entry(self)
-                entry.insert(0, cell)
-                name_importance_entries.append(entry)
-            entries[id] = name_importance_entries
-            remove_by_id = self.controller.get_remove_by_id_func(id)
-            x_button = Button(self, text='X', command=remove_by_id)
-            row = name_importance_entries + [x_button]
-            table.append(row)
+        all_p = []
+        for i in range(n+1):
+            priority = (None if i == n else sorted[i])
+            id = (-1 if i == n else priority.id)
+            name = ('' if i == n else priority.name)
+            importance = ('' if i == n else priority.importance)
 
-        name_importance_entries = []
-        for i in range(2):
-            entry = Entry(self)
-            name_importance_entries.append(entry)
-        entries[-1] = name_importance_entries
-        table.append(name_importance_entries)
+            entry_1 = Entry(self)
+            entry_1.insert(0, name)
+            entry_2 = Entry(self)
+            entry_2.insert(0, importance)
+            x_button = Button(self, text=remove_str_, 
+                              command=(lambda id=id: self.controller.remove(id)))
+            if i == n:
+                x_button = None
+            all_p.append((id, entry_1, entry_2, x_button))
+
+        form_dict = {}
+        for i in range(len(all_p)):
+            id, entry_1, entry_2 = all_p[i][0: 3]
+            form_dict[id] = (entry_1, entry_2)
+
+        button = Button(self, text='Edit!', 
+                        command=(lambda: self.controller.edit(self.get_values(form_dict))))
+
+        table = [header_label] + [[p[1], p[2], p[3]] for p in all_p] + [[button]]
 
         for i in range(len(table)):
             for j in range(len(table[i])):
+                if table[i][j] is None:
+                    continue
                 table[i][j].grid(row=i, column=j)
 
-        button = Button(self, text='Edit!', command=(lambda: self.controller.edit(entries)))
-        button.grid()
+    def get_values(self, form_dict):
+        values = []
+
+        for id in form_dict:
+            entry_1, entry_2 = form_dict[id]
+            name = entry_1.get()
+            importance = entry_2.get()
+            if id == -1:  # New priority row
+                if (name == '') or (importance == ''):
+                    continue
+                else:
+                    id = self.priority_list.get_next_id()
+            values.append((id, name, importance))
+        return values
+
 

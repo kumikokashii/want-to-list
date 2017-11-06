@@ -21,7 +21,7 @@ class PriorityList(IncrementalIDList):
         return sorted(self, key=lambda priority: priority.importance)
 
     def edit(self, new_list):
-        # new_list is a user input. It's a tuple of tuples. ((id, name, importance), ...)
+        # new_list is a tuple of tuples. ((id, name, importance), ...)
         
         current_list = self.copy()
         self.clear()
