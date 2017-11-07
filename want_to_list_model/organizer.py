@@ -57,7 +57,9 @@ class Organizer():
         with open('want_to_list.pickle', 'wb') as f:
             pickle.dump(self, f)
 
-    def add_contact_info(self, name, phone, address):
+    def add_contact_info(self, name, phone_digits, street_address, city, state, zip_code):
+        phone = Phone(phone_digits)
+        address = Address(street_address, city, state, zip_code)
         self.contact_info_book.add_contact_info(name, phone, address)
 
     def remove_contact_info(self, id):

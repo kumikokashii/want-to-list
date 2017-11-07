@@ -9,9 +9,12 @@ class CTRLContactInfo():
     def add(self, values):
         # Add new contact info to organizer
         name = values[name_]
-        phone = Phone(values[phone_])
-        address = Address(values[street_address_], values[city_], values[state_], values[zip_code_])
-        self.organizer.add_contact_info(name, phone, address)
+        phone_digits = values[phone_]
+        street_address = values[street_address_]
+        city = values[city_]
+        state = values[state_]
+        zip_code = values[zip_code_]
+        self.organizer.add_contact_info(name, phone_digits, street_address, city, state, zip_code)
 
         # Refresh Contact Info View & Add
         self.ui.contact_info.refresh_view()
