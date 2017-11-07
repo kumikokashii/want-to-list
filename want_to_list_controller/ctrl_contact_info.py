@@ -14,7 +14,7 @@ class CTRLContactInfo():
         city = values[city_]
         state = values[state_]
         zip_code = values[zip_code_]
-        self.organizer.add_contact_info(name, phone_digits, street_address, city, state, zip_code)
+        self.organizer.contact_info_book.add_contact_info(name, phone_digits, street_address, city, state, zip_code)
 
         # Refresh Contact Info View & Add
         self.ui.contact_info.refresh_view()

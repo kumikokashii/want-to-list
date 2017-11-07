@@ -6,7 +6,7 @@ class CTRLPriorities():
 
     def edit(self, values):
         # Update priority in organizer
-        self.organizer.edit_priorities(values)
+        self.organizer.priority_list.edit(values)
 
         self.refresh_ui()
 
