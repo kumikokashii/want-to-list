@@ -65,4 +65,19 @@ class ItemList(IncrementalIDList):
             if item.priority is priority:  # is checkes references pointed. == checks values.
                 item.priority = None
 
+    def toggle_check(self, id):
+        item = self.get_elem_by_id(id)
+        item.toggle_check()
+
+    def update_item(self, id, name, due_date, priority_name,
+                    amount, contact_info_name):
+        item = self.get_elem_by_id(id)
+
+        item.update_name(name)
+        item.update_due_date(due_date)
+        item.update_priority(self.priority_list.get_elem_by_name(priority_name))
+        #item.picture = values[picture_]
+        item.update_money_amount(amount)
+        item.update_contact_info(self.contact_info_book.get_elem_by_name(contact_info_name))
+
 

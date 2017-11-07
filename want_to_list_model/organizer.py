@@ -49,7 +49,6 @@ class Organizer():
         output += str(self.item_list)
         return output
     
-
     def load(self):
         with open('want_to_list.pickle', 'rb') as f:
             return pickle.load(f)
@@ -57,5 +56,20 @@ class Organizer():
     def save(self):
         with open('want_to_list.pickle', 'wb') as f:
             pickle.dump(self, f)
+
+    def add_contact_info(self, name, phone, address):
+        self.contact_info_book.add_contact_info(name, phone, address)
+
+    def remove_contact_info(self, id):
+        self.item_list.remove_contact_info(id)
+        self.contact_info_book.remove_elem_by_id(id)
+
+    def edit_priorities(self, values):
+        self.priority_list.edit(values)
+
+    def remove_priority(self, id):
+        self.item_list.remove_priority(id)
+        self.priority_list.remove_elem_by_id(id)
+
 
 

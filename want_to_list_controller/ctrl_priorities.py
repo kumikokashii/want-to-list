@@ -1,20 +1,18 @@
 
 class CTRLPriorities():
     def __init__(self, organizer, ui):
-        self.item_list = organizer.item_list
-        self.priority_list = organizer.priority_list
+        self.organizer = organizer
         self.ui = ui
 
     def edit(self, values):
         # Update priority in organizer
-        self.priority_list.edit(values)
+        self.organizer.edit_priorities(values)
 
         self.refresh_ui()
 
     def remove(self, id):
         # Remove priority from organizer
-        self.item_list.remove_priority(id)
-        self.priority_list.remove_elem_by_id(id)
+        self.organizer.remove_priority(id)
 
         self.refresh_ui()
 

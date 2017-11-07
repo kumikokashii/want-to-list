@@ -65,7 +65,7 @@ class UIItemList(UITabInNB):
         # Add new item
         add_button = Button(frame, text='+')
         entry = Entry(frame)
-        add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_item(entry.get()))
+        add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_item(entry.get(), self.current_list))
         table.append([add_button, entry])
 
         for i in range(len(table)):
@@ -111,7 +111,7 @@ class UIItemList(UITabInNB):
         if len(self.current_item) == 0:  # If has no item
             add_button = Button(frame, text='+')
             entry = Entry(frame)
-            add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_child(entry.get()))
+            add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_child(entry.get(), self.current_item))
             table.append([add_button, entry])
 
         for i in range(len(table)):

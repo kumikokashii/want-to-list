@@ -3,8 +3,7 @@ from want_to_list_model import *
 
 class CTRLContactInfo():
     def __init__(self, organizer, ui):
-        self.item_list = organizer.item_list
-        self.contact_info_book = organizer.contact_info_book
+        self.organizer = organizer
         self.ui = ui
 
     def add(self, values):
@@ -12,7 +11,7 @@ class CTRLContactInfo():
         name = values[name_]
         phone = Phone(values[phone_])
         address = Address(values[street_address_], values[city_], values[state_], values[zip_code_])
-        self.contact_info_book.add_contact_info(name=name, phone=phone, address=address)
+        self.organizer.add_contact_info(name, phone, address)
 
         # Refresh Contact Info View & Add
         self.ui.contact_info.refresh_view()
@@ -23,8 +22,7 @@ class CTRLContactInfo():
 
     def remove(self, id):
         # Remove contact info from organizer
-        self.item_list.remove_contact_info(id)
-        self.contact_info_book.remove_elem_by_id(id)
+        self.organizer.remove_contact_info(id)
 
         # Refresh Contact Info View
         self.ui.contact_info.refresh_view()
