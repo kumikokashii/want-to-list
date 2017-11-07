@@ -69,7 +69,7 @@ class UIContactInfo(UITabInNB):
             for j in range(len(table[i])):
                 if table[i][j] is None:
                     continue
-                table[i][j].grid(row=i, column=j)
+                table[i][j].grid(row=i, column=j, sticky=W)
 
     def get_add_values(self, form_dict):
         values = {}
