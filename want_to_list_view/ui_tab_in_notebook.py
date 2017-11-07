@@ -4,6 +4,10 @@ from tkinter import ttk
 
 class UIFrame(ttk.Frame):
     def __init__(self, parent):
+        style = ttk.Style()
+        style.theme_use('classic')
+        style.configure('TFrame', background='white')
+
         super().__init__(parent)
 
     def cleanup(self):

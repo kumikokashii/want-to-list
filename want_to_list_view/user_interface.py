@@ -6,7 +6,7 @@ from want_to_list_view import *
 class UserInterface(Tk):
     def __init__(self, organizer):
         super().__init__()
-        
+
         self.title('Want To List')
         self.geometry('800x500')
 
