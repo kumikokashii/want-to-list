@@ -164,7 +164,13 @@ class UIItemList(UITabInNB):
                         w['style'] = 'grey_alt_1.' + w_class
                     else:
                         w['style'] = 'grey_alt_2.' + w_class
-                w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
+                if i == len(table) - 1:  # If last row
+                    columnspan = 4
+                elif len(table[i]) == 2:  # If row is not due date
+                    columnspan = 3
+                else:
+                    columnspan = 1
+                w.grid(row=i, column=j, columnspan=columnspan, sticky=W+E, padx=2, pady=1)
 
     def get_form_dict(self, frame, item):
         item_dict = self.get_item_dict(item)
@@ -180,14 +186,15 @@ class UIItemList(UITabInNB):
         widget_dict[name_] =entry
 
         # Due Date
-        entry_1 = Entry(frame)
-        entry_2 = Entry(frame)
-        entry_3 = Entry(frame)
+        entry_1 = Entry(frame, width=3)
+        entry_2 = Entry(frame, width=3)
+        entry_3 = Entry(frame, width=3)
 
         due_date = item_dict[due_date_]
         if due_date is None:
-            for entry in [entry_1, entry_2, entry_3]:
-                entry.insert(0, '')
+            entry_1.insert(0, 'Month')
+            entry_2.insert(0, 'Day')
+            entry_3.insert(0, 'Year')
         else:
             entry_1.insert(0, due_date.month)
             entry_2.insert(0, due_date.day)
@@ -255,7 +262,11 @@ class UIItemList(UITabInNB):
             if input == '':
                 values[due_date_] = None
                 break
-            values[due_date_][part] = int(input)
+            try:
+                values[due_date_][part] = int(input)
+            except ValueError:
+                values[due_date_] = None
+                break
 
         # Priority
         values[priority_] = form_dict[priority_].get()

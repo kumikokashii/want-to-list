@@ -87,7 +87,7 @@ class UIContactInfo(UITabInNB):
                         w['style'] = 'grey_alt_2.' + w_class 
                     else:
                         w['style'] = 'grey_alt_1.' + w_class 
-                w.grid(row=i, column=j, sticky=W+E)
+                w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
 
     def get_add_values(self, form_dict):
         values = {}
