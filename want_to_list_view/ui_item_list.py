@@ -166,7 +166,9 @@ class UIItemList(UITabInNB):
                         w['style'] = 'grey_alt_2.' + w_class
                 if i == len(table) - 1:  # If last row
                     columnspan = 4
-                elif len(table[i]) == 2:  # If row is not due date
+                elif j == 0:  # If label column
+                    columnspan = 1
+                elif len(table[i]) == 2:  # Entry is not due date
                     columnspan = 3
                 else:
                     columnspan = 1
