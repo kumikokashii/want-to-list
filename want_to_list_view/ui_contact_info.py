@@ -47,9 +47,9 @@ class UIContactInfo(UITabInNB):
                     if i == 0:
                         w['style'] = 'field.' + w_class
                     elif i % 2 == 1:
-                        w['style'] = 'alt_1.' + w_class
+                        w['style'] = 'grey_alt_1.' + w_class
                     else:
-                        w['style'] = 'alt_2.' + w_class
+                        w['style'] = 'grey_alt_2.' + w_class
                 w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
 
     def refresh_add(self):
@@ -83,7 +83,10 @@ class UIContactInfo(UITabInNB):
                 if j == 0:
                     w['style'] = 'field.' + w_class 
                 if j == 2:
-                    w['style'] = 'subfield.' + w_class 
+                    if i % 2 == 1:
+                        w['style'] = 'grey_alt_2.' + w_class 
+                    else:
+                        w['style'] = 'grey_alt_1.' + w_class 
                 w.grid(row=i, column=j, sticky=W+E)
 
     def get_add_values(self, form_dict):

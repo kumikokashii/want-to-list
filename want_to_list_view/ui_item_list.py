@@ -12,9 +12,9 @@ class UIItemList(UITabInNB):
         self.priority_list = organizer.priority_list
         self.contact_info_book = organizer.contact_info_book
         self.left = UIFrame(self)
-        self.left.grid(row=0, column=0)
+        self.left.grid(row=0, column=0, sticky=N)
         self.right = UIFrame(self)
-        self.right.grid(row=0, column=1)
+        self.right.grid(row=0, column=1, sticky=N)
         self.current_list = self.item_list.root
         self.current_item = self.item_list.root
         self.sort_key = 'name'
@@ -76,9 +76,9 @@ class UIItemList(UITabInNB):
                     if (self.current_list.id != 0) & (i == 0): 
                         w['style'] = 'field.' + w_class
                     elif i % 2 == 1:
-                        w['style'] = 'alt_1.' + w_class
+                        w['style'] = 'yellow_alt_1.' + w_class
                     else:
-                        w['style'] = 'alt_2.' + w_class
+                        w['style'] = 'yellow_alt_2.' + w_class
                 w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
 
     def refresh_right(self):
@@ -131,9 +131,9 @@ class UIItemList(UITabInNB):
                     if i == 0:
                         w['style'] = 'subfield.' + w_class
                     elif i % 2 == 1:
-                        w['style'] = 'alt_1.' + w_class
+                        w['style'] = 'grey_alt_1.' + w_class
                     else:
-                        w['style'] = 'alt_2.' + w_class
+                        w['style'] = 'grey_alt_2.' + w_class
                 table[i][j].grid(row=i, column=j, sticky=W+E+N+S, padx=2, pady=1)
 
     def to_edit_mode(self):
@@ -161,9 +161,9 @@ class UIItemList(UITabInNB):
                 w_class = w.winfo_class()
                 if (j == 0) and (w_class == 'TLabel'):
                     if i % 2 == 1:
-                        w['style'] = 'alt_1.' + w_class
+                        w['style'] = 'grey_alt_1.' + w_class
                     else:
-                        w['style'] = 'alt_2.' + w_class
+                        w['style'] = 'grey_alt_2.' + w_class
                 w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
 
     def get_form_dict(self, frame, item):
