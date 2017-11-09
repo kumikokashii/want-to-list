@@ -10,7 +10,7 @@ class ContactInfoBook(IncrementalIDList):
                                            street_address='711 Fun St', 
                                            city='Dream Land', state='CA', zip_code='71171')
         contact_info_book.add_contact_info(name='Turkey', city='Fun City')
-        contact_info_book.add_contact_info(name='Mario', city='Nintendo') 
+        contact_info_book.add_contact_info(name='Mario', phone_digits='   3334444', city='Nintendo') 
         contact_info_book.add_contact_info(name='Donkey Kong', phone_digits='5555555555', city='Nintendo') 
         return contact_info_book
 
