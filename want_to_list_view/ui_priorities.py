@@ -49,9 +49,13 @@ class UIPriorities(UITabInNB):
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                if table[i][j] is None:
+                w = table[i][j]
+                if w is None:
                     continue
-                table[i][j].grid(row=i, column=j)
+                w_class = w.winfo_class()
+                if i == 0:
+                    w['style'] = 'field.' + w_class
+                w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
 
     def get_values(self, form_dict):
         values = []

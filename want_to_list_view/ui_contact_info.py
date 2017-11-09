@@ -21,7 +21,7 @@ class UIContactInfo(UITabInNB):
 
         header = []
         for field in [name_, phone_, address_, 'Remove']:
-            header.append(Label(frame, text=field))
+            header.append(ttk.Label(frame, text=field))
 
         contact_infos = []
         for contact_info in self.contact_info_book:
@@ -32,7 +32,7 @@ class UIContactInfo(UITabInNB):
 
             contact_info = []
             for text in [name, phone, address]:
-                contact_info.append(Label(frame, text=text))
+                contact_info.append(ttk.Label(frame, text=text))
             x_button = Button(frame, text=remove_str_, command=(lambda id=id: self.controller.remove(id)))
             contact_info.append(x_button)
             contact_infos.append(contact_info)
@@ -41,7 +41,16 @@ class UIContactInfo(UITabInNB):
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                table[i][j].grid(row=i, column=j)
+                w = table[i][j]
+                w_class = w.winfo_class()
+                if w_class == 'TLabel':
+                    if i == 0:
+                        w['style'] = 'field.' + w_class
+                    elif i % 2 == 1:
+                        w['style'] = 'alt_1.' + w_class
+                    else:
+                        w['style'] = 'alt_2.' + w_class
+                w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
 
     def refresh_add(self):
         frame = self.add
@@ -67,9 +76,15 @@ class UIContactInfo(UITabInNB):
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                if table[i][j] is None:
+                w = table[i][j]
+                if w is None:
                     continue
-                table[i][j].grid(row=i, column=j, sticky=W)  # Test W+E
+                w_class = w.winfo_class()
+                if j == 0:
+                    w['style'] = 'field.' + w_class 
+                if j == 2:
+                    w['style'] = 'subfield.' + w_class 
+                w.grid(row=i, column=j, sticky=W+E)
 
     def get_add_values(self, form_dict):
         values = {}

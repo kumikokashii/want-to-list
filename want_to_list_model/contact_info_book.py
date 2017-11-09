@@ -9,8 +9,9 @@ class ContactInfoBook(IncrementalIDList):
         contact_info_book.add_contact_info(name='7Eleven', phone_digits='7117117117', 
                                            street_address='711 Fun St', 
                                            city='Dream Land', state='CA', zip_code='71171')
-        contact_info_book.add_contact_info(name='Turkey', phone_digits='', 
-                                           city='Fun City')
+        contact_info_book.add_contact_info(name='Turkey', city='Fun City')
+        contact_info_book.add_contact_info(name='Mario', city='Nintendo') 
+        contact_info_book.add_contact_info(name='Donkey Kong', phone_digits='5555555555', city='Nintendo') 
         return contact_info_book
 
     def __init__(self):

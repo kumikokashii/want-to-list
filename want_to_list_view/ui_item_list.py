@@ -38,12 +38,12 @@ class UIItemList(UITabInNB):
         # List name
         if self.current_list.id != 0:  # If not top level
             parent_id = self.current_list.parent.id
-            label_1 = Label(frame, text='^')
-            label_1.bind('<Button-1>', lambda event, id=parent_id: self.controller.onclick_item(id))
+            up_button = Button(frame, text='^')
+            up_button.bind('<Button-1>', lambda event, id=parent_id: self.controller.onclick_item(id))
 
-            label_2 = Label(frame, text=self.current_list.name)
-            label_2.bind('<Button-1>', lambda event, id=self.current_list.id: self.controller.onclick_title(id))
-            table.append([label_1, label_2])
+            label = ttk.Label(frame, text=self.current_list.name)
+            label.bind('<Button-1>', lambda event, id=self.current_list.id: self.controller.onclick_title(id))
+            table.append([up_button, label])
 
         # Items
         sorted = self.current_list.get_sorted_by(self.sort_key)
@@ -57,7 +57,7 @@ class UIItemList(UITabInNB):
                 check_button.select()
             check_button.bind('<Button-1>', lambda event, id=id: self.controller.toggle_check(id))
 
-            label = Label(frame, text=name)
+            label = ttk.Label(frame, text=name)
             label.bind('<Button-1>', lambda event, id=id: self.controller.onclick_item(id))
 
             table.append([check_button, label])
@@ -70,7 +70,16 @@ class UIItemList(UITabInNB):
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                table[i][j].grid(row=i, column=j)
+                w = table[i][j]
+                w_class = w.winfo_class()
+                if (j == 1) & (w_class == 'TLabel'):
+                    if (self.current_list.id != 0) & (i == 0): 
+                        w['style'] = 'field.' + w_class
+                    elif i % 2 == 1:
+                        w['style'] = 'alt_1.' + w_class
+                    else:
+                        w['style'] = 'alt_2.' + w_class
+                w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
 
     def refresh_right(self):
         frame = self.right
@@ -90,7 +99,7 @@ class UIItemList(UITabInNB):
         table = []
 
         # Name & Edit button
-        label = Label(frame, text=item_dict[name_])
+        label = ttk.Label(frame, text=item_dict[name_])
         edit_button = Button(frame, text='Edit me')
         edit_button.bind('<Button-1>', lambda event: self.to_edit_mode())
         table.append([label, edit_button])
@@ -103,8 +112,8 @@ class UIItemList(UITabInNB):
 
             format = format_dict[field]
             value = format(content)
-            label_1 = Label(frame, text=field)
-            label_2 = Label(frame, text=value)
+            label_1 = ttk.Label(frame, text=field)
+            label_2 = ttk.Label(frame, text=value)
             table.append([label_1, label_2])
 
         # Add new item
@@ -116,7 +125,16 @@ class UIItemList(UITabInNB):
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                table[i][j].grid(row=i, column=j)
+                w = table[i][j]
+                w_class = w.winfo_class()
+                if w_class == 'TLabel':
+                    if i == 0:
+                        w['style'] = 'subfield.' + w_class
+                    elif i % 2 == 1:
+                        w['style'] = 'alt_1.' + w_class
+                    else:
+                        w['style'] = 'alt_2.' + w_class
+                table[i][j].grid(row=i, column=j, sticky=W+E+N+S, padx=2, pady=1)
 
     def to_edit_mode(self):
         frame = self.right
@@ -139,7 +157,14 @@ class UIItemList(UITabInNB):
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                table[i][j].grid(row=i, column=j)
+                w = table[i][j]
+                w_class = w.winfo_class()
+                if (j == 0) and (w_class == 'TLabel'):
+                    if i % 2 == 1:
+                        w['style'] = 'alt_1.' + w_class
+                    else:
+                        w['style'] = 'alt_2.' + w_class
+                w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
 
     def get_form_dict(self, frame, item):
         item_dict = self.get_item_dict(item)
