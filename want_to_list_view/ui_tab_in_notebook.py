@@ -1,5 +1,4 @@
 
-from tkinter import *
 from tkinter import ttk
 
 class UIFrame(ttk.Frame):
@@ -13,7 +12,7 @@ class UIFrame(ttk.Frame):
     def get_label_dict(self, frame, text_list):
         label = {}
         for text in text_list:
-            label[text] = Label(frame, text=text)
+            label[text] = ttk.Label(frame, text=text)
         return label
 
 class UITabInNB(UIFrame):

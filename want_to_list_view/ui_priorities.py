@@ -29,7 +29,7 @@ class UIPriorities(UITabInNB):
 
             entry_1 = Entry(self)
             entry_1.insert(0, name)
-            entry_2 = Entry(self)
+            entry_2 = Entry(self, width=3)
             entry_2.insert(0, importance)
             x_button = Button(self, text=remove_str_, 
                               command=(lambda id=id: self.controller.remove(id)))
@@ -49,9 +49,17 @@ class UIPriorities(UITabInNB):
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                if table[i][j] is None:
+                w = table[i][j]
+                if w is None:
                     continue
-                table[i][j].grid(row=i, column=j)
+                w_class = w.winfo_class()
+                if i == 0:
+                    w['style'] = 'field.' + w_class
+                if i == len(table) - 1:
+                    columnspan = 2
+                else:
+                    columnspan = 1
+                w.grid(row=i, column=j, columnspan=columnspan, sticky=W+E, padx=2, pady=1)
 
     def get_values(self, form_dict):
         values = []

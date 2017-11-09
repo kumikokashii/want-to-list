@@ -12,9 +12,9 @@ class UIItemList(UITabInNB):
         self.priority_list = organizer.priority_list
         self.contact_info_book = organizer.contact_info_book
         self.left = UIFrame(self)
-        self.left.grid(row=0, column=0)
+        self.left.grid(row=0, column=0, sticky=N)
         self.right = UIFrame(self)
-        self.right.grid(row=0, column=1)
+        self.right.grid(row=0, column=1, sticky=N)
         self.current_list = self.item_list.root
         self.current_item = self.item_list.root
         self.sort_key = 'name'
@@ -38,12 +38,12 @@ class UIItemList(UITabInNB):
         # List name
         if self.current_list.id != 0:  # If not top level
             parent_id = self.current_list.parent.id
-            label_1 = Label(frame, text='^')
-            label_1.bind('<Button-1>', lambda event, id=parent_id: self.controller.onclick_item(id))
+            up_button = Button(frame, text='^')
+            up_button.bind('<Button-1>', lambda event, id=parent_id: self.controller.onclick_item(id))
 
-            label_2 = Label(frame, text=self.current_list.name)
-            label_2.bind('<Button-1>', lambda event, id=self.current_list.id: self.controller.onclick_title(id))
-            table.append([label_1, label_2])
+            label = ttk.Label(frame, text=self.current_list.name)
+            label.bind('<Button-1>', lambda event, id=self.current_list.id: self.controller.onclick_title(id))
+            table.append([up_button, label])
 
         # Items
         sorted = self.current_list.get_sorted_by(self.sort_key)
@@ -57,7 +57,7 @@ class UIItemList(UITabInNB):
                 check_button.select()
             check_button.bind('<Button-1>', lambda event, id=id: self.controller.toggle_check(id))
 
-            label = Label(frame, text=name)
+            label = ttk.Label(frame, text=name)
             label.bind('<Button-1>', lambda event, id=id: self.controller.onclick_item(id))
 
             table.append([check_button, label])
@@ -70,7 +70,16 @@ class UIItemList(UITabInNB):
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                table[i][j].grid(row=i, column=j)
+                w = table[i][j]
+                w_class = w.winfo_class()
+                if (j == 1) & (w_class == 'TLabel'):
+                    if (self.current_list.id != 0) & (i == 0): 
+                        w['style'] = 'field.' + w_class
+                    elif i % 2 == 1:
+                        w['style'] = 'yellow_alt_1.' + w_class
+                    else:
+                        w['style'] = 'yellow_alt_2.' + w_class
+                w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
 
     def refresh_right(self):
         frame = self.right
@@ -90,7 +99,7 @@ class UIItemList(UITabInNB):
         table = []
 
         # Name & Edit button
-        label = Label(frame, text=item_dict[name_])
+        label = ttk.Label(frame, text=item_dict[name_])
         edit_button = Button(frame, text='Edit me')
         edit_button.bind('<Button-1>', lambda event: self.to_edit_mode())
         table.append([label, edit_button])
@@ -103,8 +112,8 @@ class UIItemList(UITabInNB):
 
             format = format_dict[field]
             value = format(content)
-            label_1 = Label(frame, text=field)
-            label_2 = Label(frame, text=value)
+            label_1 = ttk.Label(frame, text=field)
+            label_2 = ttk.Label(frame, text=value)
             table.append([label_1, label_2])
 
         # Add new item
@@ -116,7 +125,16 @@ class UIItemList(UITabInNB):
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                table[i][j].grid(row=i, column=j)
+                w = table[i][j]
+                w_class = w.winfo_class()
+                if w_class == 'TLabel':
+                    if i == 0:
+                        w['style'] = 'subfield.' + w_class
+                    elif i % 2 == 1:
+                        w['style'] = 'grey_alt_1.' + w_class
+                    else:
+                        w['style'] = 'grey_alt_2.' + w_class
+                table[i][j].grid(row=i, column=j, sticky=W+E+N+S, padx=2, pady=1)
 
     def to_edit_mode(self):
         frame = self.right
@@ -139,7 +157,22 @@ class UIItemList(UITabInNB):
 
         for i in range(len(table)):
             for j in range(len(table[i])):
-                table[i][j].grid(row=i, column=j)
+                w = table[i][j]
+                w_class = w.winfo_class()
+                if (j == 0) and (w_class == 'TLabel'):
+                    if i % 2 == 1:
+                        w['style'] = 'grey_alt_1.' + w_class
+                    else:
+                        w['style'] = 'grey_alt_2.' + w_class
+                if i == len(table) - 1:  # If last row
+                    columnspan = 4
+                elif j == 0:  # If label column
+                    columnspan = 1
+                elif len(table[i]) == 2:  # Entry is not due date
+                    columnspan = 3
+                else:
+                    columnspan = 1
+                w.grid(row=i, column=j, columnspan=columnspan, sticky=W+E, padx=2, pady=1)
 
     def get_form_dict(self, frame, item):
         item_dict = self.get_item_dict(item)
@@ -155,14 +188,15 @@ class UIItemList(UITabInNB):
         widget_dict[name_] =entry
 
         # Due Date
-        entry_1 = Entry(frame)
-        entry_2 = Entry(frame)
-        entry_3 = Entry(frame)
+        entry_1 = Entry(frame, width=3)
+        entry_2 = Entry(frame, width=3)
+        entry_3 = Entry(frame, width=3)
 
         due_date = item_dict[due_date_]
         if due_date is None:
-            for entry in [entry_1, entry_2, entry_3]:
-                entry.insert(0, '')
+            entry_1.insert(0, 'Month')
+            entry_2.insert(0, 'Day')
+            entry_3.insert(0, 'Year')
         else:
             entry_1.insert(0, due_date.month)
             entry_2.insert(0, due_date.day)
@@ -230,7 +264,11 @@ class UIItemList(UITabInNB):
             if input == '':
                 values[due_date_] = None
                 break
-            values[due_date_][part] = int(input)
+            try:
+                values[due_date_][part] = int(input)
+            except ValueError:
+                values[due_date_] = None
+                break
 
         # Priority
         values[priority_] = form_dict[priority_].get()

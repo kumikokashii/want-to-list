@@ -1,14 +1,13 @@
-from tkinter import *
 from tkinter import ttk
-
 from want_to_list_view import *
 
 class UserInterface(Tk):
     def __init__(self, organizer):
         super().__init__()
-        
+
         self.title('Want To List')
-        self.geometry('800x500')
+        self.geometry('600x650')
+        self.style = UIStyle.get_original()
 
         self.nb = ttk.Notebook(self)
         self.nb.grid()  # Need to specify parameters???

@@ -7,4 +7,8 @@ class Phone():
         self.line = digits[6: 10]  # Last 4 digits
 
     def __str__(self):
+        if (self.area_code.strip() == '') and (self.prefix.strip() == '') and (self.line.strip() == ''):
+            return ''
+        if (self.area_code.strip() == ''):
+            return self.prefix + '-' + self.line
         return '(' + self.area_code + ')' + self.prefix + '-' + self.line
