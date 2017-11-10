@@ -1,3 +1,6 @@
+import os
+import sys
+
 from .item_type_list import *
 from .priority_list import *
 from .contact_info_book import *
@@ -8,6 +11,8 @@ from .money import *
 import pickle
 
 class Organizer():
+    default_file_path = 'my_want_to_list.pickle'
+
     def get_test_instance():
         organizer = Organizer()
 
@@ -27,7 +32,24 @@ class Organizer():
 
         return organizer
 
-    def __init__(self):
+    def load(file_path=None):
+        if file_path is None:  # If no file is specified, default file is selected
+            file_path = Organizer.default_file_path
+            if os.path.isfile(file_path):   # If file exists
+                with open(file_path, 'rb') as f:
+                    return pickle.load(f)
+            else:
+                return Organizer()
+
+        # Try loading a specified file
+        try:
+            with open(file_path, 'rb') as f:
+                return pickle.load(f)
+        except FileNotFoundError as e:
+            raise e
+
+    def __init__(self, file_path=None):
+        self.file_path = Organizer.default_file_path if (file_path is None) else file_path
         self.item_type_list = ItemTypeList.get_default()
         self.priority_list = PriorityList.get_test_instance()
         self.contact_info_book = ContactInfoBook.get_test_instance()
@@ -48,13 +70,9 @@ class Organizer():
         output += '\n'
         output += str(self.item_list)
         return output
-    
-    def load(self):
-        with open('want_to_list.pickle', 'rb') as f:
-            return pickle.load(f)
 
     def save(self):
-        with open('want_to_list.pickle', 'wb') as f:
+        with open(self.file_path, 'wb') as f:
             pickle.dump(self, f)
 
     def remove_contact_info(self, id):
