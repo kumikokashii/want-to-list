@@ -10,8 +10,4 @@ class CTRLSettings():
 
     def start_fresh(self):
         self.organizer.start_fresh()
-
-        self.ui.item_list.current_list = self.organizer.item_list.root
-        self.ui.item_list.current_item = self.organizer.item_list.root
-
         self.ui.initialize()

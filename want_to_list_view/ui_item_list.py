@@ -29,7 +29,9 @@ class UIItemList(UITabInNB):
                      created_date_: item.created_date}
         return item_dict
         
-    def refresh_left(self):
+    def refresh_left(self, new_list=None):
+        if new_list is not None:
+            self.current_list = new_list
         frame = self.left
         frame.cleanup() 
 
@@ -81,7 +83,9 @@ class UIItemList(UITabInNB):
                         w['style'] = 'yellow_alt_2.' + w_class
                 w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
 
-    def refresh_right(self):
+    def refresh_right(self, new_item=None):
+        if new_item is not None:
+            self.current_item = new_item
         frame = self.right
         frame.cleanup()
 

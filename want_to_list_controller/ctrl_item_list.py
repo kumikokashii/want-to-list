@@ -21,32 +21,26 @@ class CTRLItemList():
         item = self.item_list.get_elem_by_id(id)
 
         if len(item) > 0:  # If there are children items, show them on Left
-            self.ui.current_list = item
-            self.ui.refresh_left()
+            self.ui.refresh_left(item)
 
         # Show self details on Right
-        self.ui.current_item = item
-        self.ui.refresh_right()
+        self.ui.refresh_right(item)
 
     def onclick_title(self, id):
         item = self.item_list.get_elem_by_id(id)
-        self.ui.current_item = item
-        self.ui.refresh_right()
+        self.ui.refresh_right(item)
 
     def add_item(self, name, parent):
         item = self.item_list.add_item(name=name, parent=parent)
 
         self.ui.refresh_left()
-        self.ui.current_item = item
-        self.ui.refresh_right()
+        self.ui.refresh_right(item)
 
     def add_child(self, name, parent):
         item = self.item_list.add_item(name=name, parent=parent)
 
-        self.ui.current_list = self.ui.current_item
-        self.ui.refresh_left()
-        self.ui.current_item = item
-        self.ui.refresh_right()
+        self.ui.refresh_left(parent)
+        self.ui.refresh_right(item)
 
     def update_item(self, id, values):
 

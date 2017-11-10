@@ -4,6 +4,7 @@ from want_to_list_view import *
 class UserInterface(Tk):
     def __init__(self, organizer):
         super().__init__()
+        self.organizer = organizer
 
         self.title('Want To List')
         self.geometry('600x650')
@@ -25,8 +26,8 @@ class UserInterface(Tk):
         self.settings.controller = controller.settings
 
     def initialize(self):
-        self.item_list.refresh_left()
-        self.item_list.refresh_right()
+        self.item_list.refresh_left(self.organizer.item_list.root)
+        self.item_list.refresh_right(self.organizer.item_list.root)
         self.contact_info.refresh_view()
         self.contact_info.refresh_add()
         self.priorities.refresh()
