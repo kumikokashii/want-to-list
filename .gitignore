@@ -1,4 +1,4 @@
 .*.swp
 __pycache__/
 .DS_Store
-want_to_list.pickle
+my_want_to_list.pickle
