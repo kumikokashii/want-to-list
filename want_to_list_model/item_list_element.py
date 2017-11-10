@@ -44,6 +44,9 @@ class ItemListElement(list):
             output += '\n'
         return output
 
+    def __eq__(self, other):
+        return self.id == other.id
+
     def short_str(self):
         return str(self.id) + ' ' + self.name
 

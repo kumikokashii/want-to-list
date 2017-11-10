@@ -73,3 +73,12 @@ class CTRLItemList():
         # Refresh UI
         self.ui.refresh_left()
         self.ui.refresh_right()
+
+    def remove_item(self, id): 
+        item = self.item_list.get_elem_by_id(id)
+        new_left = item.parent if (len(item) > 0) else None
+        self.item_list.remove_item(id)
+
+        self.ui.refresh_left(new_left)
+        self.ui.refresh_right(self.item_list.root)
+

@@ -149,6 +149,8 @@ class UIItemList(UITabInNB):
         update_button = Button(frame, text='Update!',
                                command=(lambda id=self.current_item.id, form_dict=form_dict:
                                         self.controller.update_item(id, values=self.get_update_item_values(form_dict))))
+        remove_button = Button(frame, text='Remove',
+                               command=(lambda id=self.current_item.id: self.controller.remove_item(id)))
 
         table = [[label[name_], widget_dict[name_]],
                  [label[due_date_], widget_dict[due_date_][month_],
@@ -157,7 +159,8 @@ class UIItemList(UITabInNB):
                  # [label[picture_], widget_dict[picture_]],
                  [label[money_], widget_dict[money_]],
                  [label[contact_info_], widget_dict[contact_info_]],
-                 [update_button]]
+                 [update_button],
+                 [remove_button]]
 
         for i in range(len(table)):
             for j in range(len(table[i])):
@@ -168,7 +171,7 @@ class UIItemList(UITabInNB):
                         w['style'] = 'grey_alt_1.' + w_class
                     else:
                         w['style'] = 'grey_alt_2.' + w_class
-                if i == len(table) - 1:  # If last row
+                if i > len(table) - 3:  # If last 2 rows
                     columnspan = 4
                 elif j == 0:  # If label column
                     columnspan = 1
