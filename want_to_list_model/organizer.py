@@ -65,5 +65,8 @@ class Organizer():
         self.item_list.remove_priority(id)
         self.priority_list.remove_elem_by_id(id)
 
+    def start_fresh(self):
+        for lst in [self.priority_list, self.contact_info_book, self.item_list]:
+            lst.clear()
 
 
