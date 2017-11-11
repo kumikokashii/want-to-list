@@ -44,7 +44,7 @@ class ItemListElement(list):
             output += '\n'
         return output
 
-    def __eq__(self, other):
+    def __eq__(self, other):  # for ==
         return self.id == other.id
 
     def short_str(self):
@@ -70,6 +70,7 @@ class ItemListElement(list):
         self.priority = priority
 
     def update_money_amount(self, amount):
+        # Update self
         if amount is None:
             self.money = None
             return
@@ -78,6 +79,20 @@ class ItemListElement(list):
             self.money = Money(amount)
         else:
             self.money.amount = amount
+
+        # Update parent, its parent, etc.
+        if self.parent.id == 0:  # Done if top level
+           return
+
+        sum_amount = None
+        for item in self.parent:
+            if item.money is None:
+                continue
+            if sum_amount is None:
+                sum_amount = item.money.amount
+            else:
+                sum_amount += item.money.amount
+        self.parent.update_money_amount(sum_amount)
 
     def update_contact_info(self, contact_info):
         self.contact_info = contact_info
