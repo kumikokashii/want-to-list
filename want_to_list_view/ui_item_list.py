@@ -5,6 +5,8 @@ from tkinter import ttk
 from str_vars import *
 from .ui_tab_in_notebook import *
 
+import datetime
+
 class UIItemList(UITabInNB):
     def __init__(self, parent, tab_name, organizer): 
         super().__init__(parent, tab_name)
@@ -32,7 +34,9 @@ class UIItemList(UITabInNB):
 
     def show_onchange(self, show_var):
         self.show = show_var.get()
+        self.current_item = self.current_list
         self.refresh_left()
+        self.refresh_right()
 
     def sort_by_onchange(self, sort_by_var):
         self.sort_key = sort_by_var.get()
@@ -40,8 +44,11 @@ class UIItemList(UITabInNB):
 
     def get_items_table(self, frame, sorted):
         items_table = []
+
         for label_text, items in sorted:
             if label_text is not None:
+                if isinstance(label_text, datetime.date):  # Format date
+                    label_text = '{:%a, %b %-d, %Y}'.format(label_text)
                 label = ttk.Label(frame, text=label_text)
                 items_table.append([label])
 
@@ -51,10 +58,19 @@ class UIItemList(UITabInNB):
 
         return items_table
 
+    def get_item_name(self, item):
+        name = item.name 
+        if self.show == 'current list only':
+            return name
+        parent = item.parent
+        if parent.id == 0:  # If top level
+            return name
+        return name + ' [' + parent.name + ']'
+
     def get_item_row(self, frame, item):
             id = item.id
             is_checked = item.is_checked
-            name = item.name
+            name = self.get_item_name(item)
 
             check_button = Checkbutton(frame)
             if is_checked:
@@ -125,8 +141,12 @@ class UIItemList(UITabInNB):
             for j in range(len(table[i])):
                 w = table[i][j]
                 w_class = w.winfo_class()
+                columnspan = 1
                 if (i in [0, 1]) & (w_class == 'TLabel'):
                     w['style'] = 'options.' + w_class
+                elif (j == 0) & (w_class == 'TLabel'):
+                    w['style'] = 'sort_label.' + w_class
+                    columnspan = 2
                 elif (j == 1) & (w_class == 'TLabel'):
                     if (self.current_list.id != 0) & (i == 2): 
                         w['style'] = 'field.' + w_class
@@ -134,7 +154,7 @@ class UIItemList(UITabInNB):
                         w['style'] = 'yellow_alt_1.' + w_class
                     else:
                         w['style'] = 'yellow_alt_2.' + w_class
-                w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
+                w.grid(row=i, column=j, columnspan=columnspan, sticky=W+E, padx=2, pady=1)
 
     def refresh_right(self, new_item=None):
         if new_item is not None:
@@ -155,11 +175,11 @@ class UIItemList(UITabInNB):
 
         table = []
 
-        # Name & Edit button
-        label = ttk.Label(frame, text=item_dict[name_])
-        edit_button = Button(frame, text='Edit me')
-        edit_button.bind('<Button-1>', lambda event: self.to_edit_mode())
-        table.append([label, edit_button])
+        # Name
+        name = self.get_item_name(item)
+
+        label = ttk.Label(frame, text=name)
+        table.append([label])
 
         # Details
         for field in [due_date_, priority_, picture_, money_, contact_info_, created_date_]:
@@ -173,6 +193,11 @@ class UIItemList(UITabInNB):
             label_2 = ttk.Label(frame, text=value)
             table.append([label_1, label_2])
 
+        # Edit button
+        edit_button = Button(frame, text='Edit me')
+        edit_button.bind('<Button-1>', lambda event: self.to_edit_mode())
+        table.append([edit_button])
+
         # Add new item
         if len(self.current_item) == 0:  # If has no item
             add_button = Button(frame, text='+')
@@ -184,6 +209,7 @@ class UIItemList(UITabInNB):
             for j in range(len(table[i])):
                 w = table[i][j]
                 w_class = w.winfo_class()
+                columnspan = 3 - len(table[i])
                 if w_class == 'TLabel':
                     if i == 0:
                         w['style'] = 'subfield.' + w_class
@@ -191,7 +217,7 @@ class UIItemList(UITabInNB):
                         w['style'] = 'grey_alt_1.' + w_class
                     else:
                         w['style'] = 'grey_alt_2.' + w_class
-                table[i][j].grid(row=i, column=j, sticky=W+E+N+S, padx=2, pady=1)
+                table[i][j].grid(row=i, column=j, columnspan=columnspan, sticky=W+E+N+S, padx=2, pady=1)
 
     def to_edit_mode(self):
         frame = self.right
