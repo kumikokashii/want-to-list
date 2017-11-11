@@ -1,5 +1,7 @@
 from .money import *
 
+from str_vars import *
+
 class ItemListElement(list):
     def __init__(self, id, name, item_type, parent,
                  created_date, due_date, priority, picture,
@@ -50,15 +52,39 @@ class ItemListElement(list):
     def short_str(self):
         return str(self.id) + ' ' + self.name
 
+    def get_sorted_by_due_date(self):
+        self.sort(key=lambda item: item.id)
+        not_none_list = []
+        none_list = []
+        for item in self:
+            if item.due_date is None:
+                none_list.append(item)
+            else:
+                not_none_list.append(item)
+        not_none_list.sort(key=lambda item: item.due_date, reverse=True)
+        return not_none_list + none_list
+
+    def get_sorted_by_priority(self):
+        self.sort(key=lambda item: item.id)
+        not_none_list = []
+        none_list = []
+        for item in self:
+            if item.priority is None:
+                none_list.append(item)
+            else:
+                not_none_list.append(item)
+        not_none_list.sort(key=lambda item: item.priority.importance)
+        return not_none_list + none_list
+
     def get_sorted_by(self, key):
-        if key == 'name':
-            return sorted(self, key=lambda item: item.name)
-        if key == 'created date':
-            return sorted(self, key=lambda item: item.created_date)
-        if key == 'due date':
-            return sorted(self, key=lambda item: item.due_date)
-        if key == 'priority':
-            return sorted(self, key=lambda item: item.priority)
+        if key == name_:
+            return sorted(self, key=lambda item: item.name)  # name is never None
+        if key == due_date_:
+            return self.get_sorted_by_due_date()
+        if key == priority_:
+            return self.get_sorted_by_priority()
+        if key == created_date_:
+            return sorted(self, key=lambda item: item.created_date)  # created_date is never None
 
     def update_name(self, name):
         self.name = name
