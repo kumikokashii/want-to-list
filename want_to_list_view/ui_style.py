@@ -22,7 +22,9 @@ class UIStyle(ttk.Style):
         # Labels
         style.configure('TLabel', padding=2)
 
-        style.configure('options.TLabel', background='#E0EEE0')
+        style.configure('options.TLabel', background='#E0EEE0')  # light green
+
+        style.configure('sort_label.TLabel', background='misty rose')
 
         style.configure('field.TLabel', background='pink')
         style.configure('field.TLabel', font=('Centry Gothic', 15, 'bold'))
@@ -30,10 +32,10 @@ class UIStyle(ttk.Style):
         style.configure('subfield.TLabel', background='misty rose')
         style.configure('subfield.TLabel', font=('Centry Gothic', 15, 'bold'))
 
-        style.configure('yellow_alt_1.TLabel', background='#FFEC8B')  # light grey
-        style.configure('yellow_alt_2.TLabel', background='#FCDC3B')  # dark grey
+        style.configure('yellow_alt_1.TLabel', background='#FFEC8B')  # light yellow
+        style.configure('yellow_alt_2.TLabel', background='#FCDC3B')  # dark yellow
 
-        style.configure('grey_alt_1.TLabel', background='#F2F2F2')  # light yellow 
-        style.configure('grey_alt_2.TLabel', background='#DCDCDC')  # dark yellow
+        style.configure('grey_alt_1.TLabel', background='#F2F2F2')  # light grey 
+        style.configure('grey_alt_2.TLabel', background='#DCDCDC')  # dark grey
 
         return style

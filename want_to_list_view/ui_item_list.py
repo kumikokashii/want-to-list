@@ -5,6 +5,8 @@ from tkinter import ttk
 from str_vars import *
 from .ui_tab_in_notebook import *
 
+import datetime
+
 class UIItemList(UITabInNB):
     def __init__(self, parent, tab_name, organizer): 
         super().__init__(parent, tab_name)
@@ -17,6 +19,7 @@ class UIItemList(UITabInNB):
         self.right.grid(row=0, column=1, sticky=N)
         self.current_list = self.item_list.root
         self.current_item = self.item_list.root
+        self.show = 'current list only'
         self.sort_key = name_
 
     def get_item_dict(self, item):
@@ -29,9 +32,55 @@ class UIItemList(UITabInNB):
                      created_date_: item.created_date}
         return item_dict
 
+    def show_onchange(self, show_var):
+        self.show = show_var.get()
+        self.current_item = self.current_list
+        self.refresh_left()
+        self.refresh_right()
+
     def sort_by_onchange(self, sort_by_var):
         self.sort_key = sort_by_var.get()
         self.refresh_left()
+
+    def get_items_table(self, frame, sorted):
+        items_table = []
+
+        for label_text, items in sorted:
+            if label_text is not None:
+                if isinstance(label_text, datetime.date):  # Format date
+                    label_text = '{:%a, %b %-d, %Y}'.format(label_text)
+                label = ttk.Label(frame, text=label_text)
+                items_table.append([label])
+
+            for item in items:
+                item_row = self.get_item_row(frame, item)
+                items_table.append(item_row)
+
+        return items_table
+
+    def get_item_name(self, item):
+        name = item.name 
+        if self.show == 'current list only':
+            return name
+        parent = item.parent
+        if parent.id == 0:  # If top level
+            return name
+        return name + ' [' + parent.name + ']'
+
+    def get_item_row(self, frame, item):
+            id = item.id
+            is_checked = item.is_checked
+            name = self.get_item_name(item)
+
+            check_button = Checkbutton(frame)
+            if is_checked:
+                check_button.select()
+            check_button.bind('<Button-1>', lambda event, id=id: self.controller.toggle_check(id))
+
+            label = ttk.Label(frame, text=name)
+            label.bind('<Button-1>', lambda event, id=id: self.controller.onclick_item(id))
+
+            return [check_button, label]
 
     def refresh_left(self, new_list=None):
         if new_list is not None:
@@ -40,6 +89,17 @@ class UIItemList(UITabInNB):
         frame.cleanup() 
 
         table = []
+
+        # Show
+        label = ttk.Label(frame, text='show')
+
+        variable = StringVar(frame)
+        variable.set(self.show)
+        variable.trace('w', lambda _0, _1, _2, show_var=variable: self.show_onchange(show_var))
+
+        options = ['current list only', 'all under this list']
+        option_menu = OptionMenu(frame, variable, *options)
+        table.append([label, option_menu])
 
         # Sort by
         label = ttk.Label(frame, text='sort by')
@@ -63,21 +123,13 @@ class UIItemList(UITabInNB):
             table.append([up_button, label])
 
         # Items
-        sorted = self.current_list.get_sorted_by(self.sort_key)
-        for item in sorted:
-            id = item.id
-            is_checked = item.is_checked
-            name = item.name
+        if self.show == 'current list only':
+            sorted = self.current_list.get_sorted_with_label_text_by(self.sort_key)
+        if self.show == 'all under this list':
+            sorted = self.current_list.get_all_childless_items().get_sorted_with_label_text_by(self.sort_key)
 
-            check_button = Checkbutton(frame)
-            if is_checked:
-                check_button.select()
-            check_button.bind('<Button-1>', lambda event, id=id: self.controller.toggle_check(id))
-
-            label = ttk.Label(frame, text=name)
-            label.bind('<Button-1>', lambda event, id=id: self.controller.onclick_item(id))
-
-            table.append([check_button, label])
+        items_table = self.get_items_table(frame, sorted)
+        table += items_table
 
         # Add new item
         add_button = Button(frame, text='+')
@@ -89,16 +141,20 @@ class UIItemList(UITabInNB):
             for j in range(len(table[i])):
                 w = table[i][j]
                 w_class = w.winfo_class()
-                if (i == 0) & (w_class == 'TLabel'):
+                columnspan = 1
+                if (i in [0, 1]) & (w_class == 'TLabel'):
                     w['style'] = 'options.' + w_class
+                elif (j == 0) & (w_class == 'TLabel'):
+                    w['style'] = 'sort_label.' + w_class
+                    columnspan = 2
                 elif (j == 1) & (w_class == 'TLabel'):
-                    if (self.current_list.id != 0) & (i == 1): 
+                    if (self.current_list.id != 0) & (i == 2): 
                         w['style'] = 'field.' + w_class
                     elif i % 2 == 1:
                         w['style'] = 'yellow_alt_1.' + w_class
                     else:
                         w['style'] = 'yellow_alt_2.' + w_class
-                w.grid(row=i, column=j, sticky=W+E, padx=2, pady=1)
+                w.grid(row=i, column=j, columnspan=columnspan, sticky=W+E, padx=2, pady=1)
 
     def refresh_right(self, new_item=None):
         if new_item is not None:
@@ -119,11 +175,11 @@ class UIItemList(UITabInNB):
 
         table = []
 
-        # Name & Edit button
-        label = ttk.Label(frame, text=item_dict[name_])
-        edit_button = Button(frame, text='Edit me')
-        edit_button.bind('<Button-1>', lambda event: self.to_edit_mode())
-        table.append([label, edit_button])
+        # Name
+        name = self.get_item_name(item)
+
+        label = ttk.Label(frame, text=name)
+        table.append([label])
 
         # Details
         for field in [due_date_, priority_, picture_, money_, contact_info_, created_date_]:
@@ -137,6 +193,11 @@ class UIItemList(UITabInNB):
             label_2 = ttk.Label(frame, text=value)
             table.append([label_1, label_2])
 
+        # Edit button
+        edit_button = Button(frame, text='Edit me')
+        edit_button.bind('<Button-1>', lambda event: self.to_edit_mode())
+        table.append([edit_button])
+
         # Add new item
         if len(self.current_item) == 0:  # If has no item
             add_button = Button(frame, text='+')
@@ -148,6 +209,7 @@ class UIItemList(UITabInNB):
             for j in range(len(table[i])):
                 w = table[i][j]
                 w_class = w.winfo_class()
+                columnspan = 3 - len(table[i])
                 if w_class == 'TLabel':
                     if i == 0:
                         w['style'] = 'subfield.' + w_class
@@ -155,7 +217,7 @@ class UIItemList(UITabInNB):
                         w['style'] = 'grey_alt_1.' + w_class
                     else:
                         w['style'] = 'grey_alt_2.' + w_class
-                table[i][j].grid(row=i, column=j, sticky=W+E+N+S, padx=2, pady=1)
+                table[i][j].grid(row=i, column=j, columnspan=columnspan, sticky=W+E+N+S, padx=2, pady=1)
 
     def to_edit_mode(self):
         frame = self.right
