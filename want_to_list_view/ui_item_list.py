@@ -17,7 +17,7 @@ class UIItemList(UITabInNB):
         self.right.grid(row=0, column=1, sticky=N)
         self.current_list = self.item_list.root
         self.current_item = self.item_list.root
-        self.sort_key = 'name'
+        self.sort_key = name_
 
     def get_item_dict(self, item):
         item_dict = {name_: item.name,
@@ -28,7 +28,11 @@ class UIItemList(UITabInNB):
                      contact_info_: item.contact_info,
                      created_date_: item.created_date}
         return item_dict
-        
+
+    def sort_by_onchange(self, sort_by_var):
+        self.sort_key = sort_by_var.get()
+        self.refresh_left()
+
     def refresh_left(self, new_list=None):
         if new_list is not None:
             self.current_list = new_list
@@ -36,6 +40,17 @@ class UIItemList(UITabInNB):
         frame.cleanup() 
 
         table = []
+
+        # Sort by
+        label = ttk.Label(frame, text='sort by')
+
+        variable = StringVar(frame)
+        variable.set(self.sort_key)
+        variable.trace('w', lambda _0, _1, _2, sort_by_var=variable: self.sort_by_onchange(sort_by_var))
+
+        options = [name_, due_date_, priority_, created_date_]
+        option_menu = OptionMenu(frame, variable, *options)
+        table.append([label, option_menu])
 
         # List name
         if self.current_list.id != 0:  # If not top level
@@ -74,8 +89,10 @@ class UIItemList(UITabInNB):
             for j in range(len(table[i])):
                 w = table[i][j]
                 w_class = w.winfo_class()
-                if (j == 1) & (w_class == 'TLabel'):
-                    if (self.current_list.id != 0) & (i == 0): 
+                if (i == 0) & (w_class == 'TLabel'):
+                    w['style'] = 'options.' + w_class
+                elif (j == 1) & (w_class == 'TLabel'):
+                    if (self.current_list.id != 0) & (i == 1): 
                         w['style'] = 'field.' + w_class
                     elif i % 2 == 1:
                         w['style'] = 'yellow_alt_1.' + w_class

@@ -21,5 +21,5 @@ class CTRLPriorities():
         self.ui.priorities.refresh()
 
         # Refresh Item List
+        self.ui.item_list.refresh_left()
         self.ui.item_list.refresh_right()
-

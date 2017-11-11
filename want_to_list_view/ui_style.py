@@ -22,6 +22,8 @@ class UIStyle(ttk.Style):
         # Labels
         style.configure('TLabel', padding=2)
 
+        style.configure('options.TLabel', background='#E0EEE0')
+
         style.configure('field.TLabel', background='pink')
         style.configure('field.TLabel', font=('Centry Gothic', 15, 'bold'))
 

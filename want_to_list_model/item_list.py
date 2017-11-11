@@ -2,7 +2,7 @@ from .incremental_id_list import *
 from .item_list_element import *
 from datetime import datetime, date
 
-import copy
+from str_vars import *
 
 class ItemList(IncrementalIDList):
     def __init__(self, item_type_list, priority_list, contact_info_book):
@@ -26,16 +26,6 @@ class ItemList(IncrementalIDList):
                                money=None, contact_info=None, is_checked=False)
         self.append(item)
         self.root = item
-
-    def get_sorted_by(self, key):
-        if key == 'name':
-            return sorted(self, key=lambda item: item.name)
-        if key == 'created date':
-            return sorted(self, key=lambda item: item.created_date)
-        if key == 'due date':
-            return sorted(self, key=lambda item: item.due_date)
-        if key == 'priority':
-            return sorted(self, key=lambda item: item.priority)
 
     def add_item(self, name, item_type=None, parent=None, 
                  due_date=None, priority=None, picture=None, money=None, 
