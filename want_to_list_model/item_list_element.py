@@ -69,6 +69,20 @@ class ItemListElement(list):
     def update_priority(self, priority):
         self.priority = priority
 
+    def refresh_money_amount_self_and_parents(self):
+        if self.id == 0:  # Done if root
+           return
+        sum_amount = None
+        for item in self:
+            if item.money is None:
+                continue
+            if sum_amount is None:
+                sum_amount = item.money.amount
+            else:
+                sum_amount += item.money.amount
+        self.update_money_amount(sum_amount)
+        self.parent.refresh_money_amount_self_and_parents()
+
     def update_money_amount(self, amount):
         # Update self
         if amount is None:
@@ -81,18 +95,7 @@ class ItemListElement(list):
             self.money.amount = amount
 
         # Update parent, its parent, etc.
-        if self.parent.id == 0:  # Done if top level
-           return
-
-        sum_amount = None
-        for item in self.parent:
-            if item.money is None:
-                continue
-            if sum_amount is None:
-                sum_amount = item.money.amount
-            else:
-                sum_amount += item.money.amount
-        self.parent.update_money_amount(sum_amount)
+        self.parent.refresh_money_amount_self_and_parents()
 
     def update_contact_info(self, contact_info):
         self.contact_info = contact_info

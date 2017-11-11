@@ -51,7 +51,10 @@ class ItemList(IncrementalIDList):
                                created_date, due_date, priority, picture, 
                                money, contact_info, is_checked)
         self.append(item)
+
+        # Add to parent's list, refresh parent's money amount total
         parent.append(item)
+        parent.refresh_money_amount_self_and_parents()
 
         return item
 
@@ -64,7 +67,10 @@ class ItemList(IncrementalIDList):
 
     def remove_item(self, id):
         item = self.get_elem_by_id(id)
+        parent = item.parent
+
         self.remove_children_and_self(item)
+        parent.refresh_money_amount_self_and_parents()
 
     def remove_contact_info(self, id):
         contact_info = self.contact_info_book.get_elem_by_id(id)        
