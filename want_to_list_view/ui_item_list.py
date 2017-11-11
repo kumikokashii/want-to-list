@@ -17,6 +17,7 @@ class UIItemList(UITabInNB):
         self.right.grid(row=0, column=1, sticky=N)
         self.current_list = self.item_list.root
         self.current_item = self.item_list.root
+        self.show = 'current list only'
         self.sort_key = name_
 
     def get_item_dict(self, item):
@@ -29,9 +30,41 @@ class UIItemList(UITabInNB):
                      created_date_: item.created_date}
         return item_dict
 
+    def show_onchange(self, show_var):
+        self.show = show_var.get()
+        self.refresh_left()
+
     def sort_by_onchange(self, sort_by_var):
         self.sort_key = sort_by_var.get()
         self.refresh_left()
+
+    def get_items_table(self, frame, sorted):
+        items_table = []
+        for label_text, items in sorted:
+            if label_text is not None:
+                label = ttk.Label(frame, text=label_text)
+                items_table.append([label])
+
+            for item in items:
+                item_row = self.get_item_row(frame, item)
+                items_table.append(item_row)
+
+        return items_table
+
+    def get_item_row(self, frame, item):
+            id = item.id
+            is_checked = item.is_checked
+            name = item.name
+
+            check_button = Checkbutton(frame)
+            if is_checked:
+                check_button.select()
+            check_button.bind('<Button-1>', lambda event, id=id: self.controller.toggle_check(id))
+
+            label = ttk.Label(frame, text=name)
+            label.bind('<Button-1>', lambda event, id=id: self.controller.onclick_item(id))
+
+            return [check_button, label]
 
     def refresh_left(self, new_list=None):
         if new_list is not None:
@@ -40,6 +73,17 @@ class UIItemList(UITabInNB):
         frame.cleanup() 
 
         table = []
+
+        # Show
+        label = ttk.Label(frame, text='show')
+
+        variable = StringVar(frame)
+        variable.set(self.show)
+        variable.trace('w', lambda _0, _1, _2, show_var=variable: self.show_onchange(show_var))
+
+        options = ['current list only', 'all under this list']
+        option_menu = OptionMenu(frame, variable, *options)
+        table.append([label, option_menu])
 
         # Sort by
         label = ttk.Label(frame, text='sort by')
@@ -63,21 +107,13 @@ class UIItemList(UITabInNB):
             table.append([up_button, label])
 
         # Items
-        sorted = self.current_list.get_sorted_by(self.sort_key)
-        for item in sorted:
-            id = item.id
-            is_checked = item.is_checked
-            name = item.name
+        if self.show == 'current list only':
+            sorted = self.current_list.get_sorted_with_label_text_by(self.sort_key)
+        if self.show == 'all under this list':
+            sorted = self.current_list.get_all_childless_items().get_sorted_with_label_text_by(self.sort_key)
 
-            check_button = Checkbutton(frame)
-            if is_checked:
-                check_button.select()
-            check_button.bind('<Button-1>', lambda event, id=id: self.controller.toggle_check(id))
-
-            label = ttk.Label(frame, text=name)
-            label.bind('<Button-1>', lambda event, id=id: self.controller.onclick_item(id))
-
-            table.append([check_button, label])
+        items_table = self.get_items_table(frame, sorted)
+        table += items_table
 
         # Add new item
         add_button = Button(frame, text='+')
@@ -89,10 +125,10 @@ class UIItemList(UITabInNB):
             for j in range(len(table[i])):
                 w = table[i][j]
                 w_class = w.winfo_class()
-                if (i == 0) & (w_class == 'TLabel'):
+                if (i in [0, 1]) & (w_class == 'TLabel'):
                     w['style'] = 'options.' + w_class
                 elif (j == 1) & (w_class == 'TLabel'):
-                    if (self.current_list.id != 0) & (i == 1): 
+                    if (self.current_list.id != 0) & (i == 2): 
                         w['style'] = 'field.' + w_class
                     elif i % 2 == 1:
                         w['style'] = 'yellow_alt_1.' + w_class
