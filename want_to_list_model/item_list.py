@@ -14,6 +14,7 @@ class ItemList(IncrementalIDList):
 
     def clear(self):
         super().clear()
+        self.root.clear()
         self.append(self.root)
 
     def set_root(self):
