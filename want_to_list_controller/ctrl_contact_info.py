@@ -31,5 +31,5 @@ class CTRLContactInfo():
         self.ui.contact_info.refresh_view()
 
         # Refresh Item List 
-        self.ui.item_list.refresh_right()
+        self.ui.item_list.refresh_item()
 
