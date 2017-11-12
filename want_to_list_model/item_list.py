@@ -80,13 +80,14 @@ class ItemList(IncrementalIDList):
         item.toggle_check()
 
     def update_item(self, id, name, due_date, priority_name,
-                    amount, contact_info_name):
+                    picture_skip_update, picture, amount, contact_info_name):
         item = self.get_elem_by_id(id)
 
         item.update_name(name)
         item.update_due_date(due_date)
         item.update_priority(self.priority_list.get_elem_by_name(priority_name))
-        #item.picture = values[picture_]
+        if not picture_skip_update:
+            item.update_picture(picture)
         item.update_money_amount(amount)
         item.update_contact_info(self.contact_info_book.get_elem_by_name(contact_info_name))
 

@@ -1,4 +1,4 @@
-
+from tkinter import *
 from tkinter import ttk, font
 
 class UIStyle(ttk.Style):
@@ -25,6 +25,7 @@ class UIStyle(ttk.Style):
         style.configure('options.TLabel', background='#E0EEE0')  # light green
 
         style.configure('sort_label.TLabel', background='misty rose')
+        style.configure('sort_label.TLabel', anchor=CENTER)
 
         style.configure('field.TLabel', background='pink')
         style.configure('field.TLabel', font=('Centry Gothic', 15, 'bold'))
