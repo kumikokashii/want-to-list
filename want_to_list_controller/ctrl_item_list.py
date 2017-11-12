@@ -58,7 +58,7 @@ class CTRLItemList():
         priority_name = values[priority_]
 
         # Picture
-        picture = values[picture_]
+        picture_skip_update, picture = values[picture_]
 
         # Money
         amount = values[money_]
@@ -68,7 +68,7 @@ class CTRLItemList():
 
         # Send to organizer
         self.item_list.update_item(id, name, due_date, priority_name,
-                                   picture, amount, contact_info_name) 
+                                   picture_skip_update, picture, amount, contact_info_name) 
 
         # Refresh UI
         self.ui.refresh_left()

@@ -246,7 +246,8 @@ class UIItemList(UITabInNB):
                  [label[due_date_], widget_dict[due_date_][month_],
                   widget_dict[due_date_][day_], widget_dict[due_date_][year_]],
                  [label[priority_], widget_dict[priority_]],
-                 [label[picture_], widget_dict[picture_]],
+                 [label[picture_], widget_dict[picture_]['selected'],
+                  widget_dict[picture_]['remove'], widget_dict[picture_]['upload']],
                  [label[money_], widget_dict[money_]],
                  [label[contact_info_], widget_dict[contact_info_]],
                  [update_button],
@@ -321,20 +322,20 @@ class UIItemList(UITabInNB):
         # Picture
         label = ttk.Label(frame)  # Label to contain a picture
         label_path = ttk.Label(frame, text='')  # Hidden label to store path to uploaded pic
-        pil_img = None  # PIL Image to send to model
         if item_dict[picture_] is not None:
-            pil_img = item_dict[picture_]
-            tk_image = ImageTk.PhotoImage(pil_img)  # tk object
+            tk_image = self.get_resized_tk_image(item_dict[picture_], 50)
             label.configure(image=tk_image)
             label.image = tk_image
 
-        x_button = Button(frame, text=remove_str_)  # NEED TO ADD COMMAND
+        x_button = Button(frame, text=remove_str_,
+                          command=lambda label=label, label_path=label_path:
+                                  self.remove_img_onclick(label, label_path))
         up_button = Button(frame, text='Upload',
                            command=lambda label=label, label_path=label_path:
                                    self.upload_img_onclick(label, label_path))
 
-        form_dict[picture_] = {'thumbnail': label, 'path': label_path}
-        widget_dict[picture_] = up_button
+        form_dict[picture_] = label_path 
+        widget_dict[picture_] = {'selected': label, 'remove': x_button, 'upload': up_button}
 
         # Money
         entry = Entry(frame)
@@ -361,6 +362,9 @@ class UIItemList(UITabInNB):
         widget_dict[contact_info_] = option_menu
 
         return form_dict, widget_dict
+
+    def remove_img_onclick(self, label, label_path):
+        label_path.configure(text='remove')
 
     def upload_img_onclick(self, label, label_path):
         file_path = filedialog.askopenfilename(
@@ -392,8 +396,17 @@ class UIItemList(UITabInNB):
         values[priority_] = form_dict[priority_].get()
 
         # Picture
-        file_path = form_dict[picture_]['path']['text']
-        values[picture_] = Image.open(file_path)
+        file_path = form_dict[picture_]['text']
+        skip_update = False
+        picture = None
+
+        print('new file', file_path)
+
+        if file_path == '':  # Unchanged
+            skip_update = True
+        elif file_path != 'remove':  # File is specified
+            picture = Image.open(file_path)
+        values[picture_] = (skip_update, picture)
 
         # Money
         input = form_dict[money_].get()
