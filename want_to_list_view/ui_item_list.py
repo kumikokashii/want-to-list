@@ -43,22 +43,6 @@ class UIItemList(UITabInNB):
         self.sort_key = sort_by_var.get()
         self.refresh_left()
 
-    def get_items_table(self, frame, sorted):
-        items_table = []
-
-        for label_text, items in sorted:
-            if label_text is not None:
-                if isinstance(label_text, datetime.date):  # Format date
-                    label_text = '{:%a, %b %-d, %Y}'.format(label_text)
-                label = ttk.Label(frame, text=label_text)
-                items_table.append([label])
-
-            for item in items:
-                item_row = self.get_item_row(frame, item)
-                items_table.append(item_row)
-
-        return items_table
-
     def get_item_name(self, item):
         name = item.name 
         if self.show == 'current list only':
@@ -68,28 +52,23 @@ class UIItemList(UITabInNB):
             return name
         return name + ' [' + parent.name + ']'
 
-    def get_item_row(self, frame, item):
-            id = item.id
-            is_checked = item.is_checked
-            name = self.get_item_name(item)
-
-            check_button = Checkbutton(frame)
-            if is_checked:
-                check_button.select()
-            check_button.bind('<Button-1>', lambda event, id=id: self.controller.toggle_check(id))
-
-            label = ttk.Label(frame, text=name)
-            label.bind('<Button-1>', lambda event, id=id: self.controller.onclick_item(id))
-
-            return [check_button, label]
-
     def refresh_left(self, new_list=None):
         if new_list is not None:
             self.current_list = new_list
         frame = self.left
         frame.cleanup() 
 
-        table = []
+        # Get items to display
+        if self.show == 'current list only':
+            sorted = self.current_list.get_sorted_with_label_text_by(self.sort_key)
+        if self.show == 'all under this list':
+            sorted = self.current_list.get_all_childless_items().get_sorted_with_label_text_by(self.sort_key)
+
+        parts = self.get_left_parts(frame, self.current_list, sorted)
+        self.make_grid_refresh_left(parts)
+
+    def get_left_parts(self, frame, item, sorted):
+        parts = {}
 
         # Show
         label = ttk.Label(frame, text='show')
@@ -100,7 +79,7 @@ class UIItemList(UITabInNB):
 
         options = ['current list only', 'all under this list']
         option_menu = OptionMenu(frame, variable, *options)
-        table.append([label, option_menu])
+        parts['show'] = [label, option_menu]
 
         # Sort by
         label = ttk.Label(frame, text='sort by')
@@ -111,51 +90,103 @@ class UIItemList(UITabInNB):
 
         options = [name_, due_date_, priority_, created_date_]
         option_menu = OptionMenu(frame, variable, *options)
-        table.append([label, option_menu])
+        parts['sort'] = [label, option_menu]
 
-        # List name
-        if self.current_list.id != 0:  # If not top level
-            parent_id = self.current_list.parent.id
+        # Up button and List name
+        if item.id != 0:  # If not top level
+            parent_id = item.parent.id
             up_button = Button(frame, text='^')
             up_button.bind('<Button-1>', lambda event, id=parent_id: self.controller.onclick_item(id))
 
-            label = ttk.Label(frame, text=self.current_list.name)
-            label.bind('<Button-1>', lambda event, id=self.current_list.id: self.controller.onclick_title(id))
-            table.append([up_button, label])
+            label = ttk.Label(frame, text=item.name)
+            label.bind('<Button-1>', lambda event, id=item.id: self.controller.onclick_title(id))
+            parts['list name'] = [up_button, label]
 
-        # Items
-        if self.show == 'current list only':
-            sorted = self.current_list.get_sorted_with_label_text_by(self.sort_key)
-        if self.show == 'all under this list':
-            sorted = self.current_list.get_all_childless_items().get_sorted_with_label_text_by(self.sort_key)
+        # List block
+        list_block = []
 
-        items_table = self.get_items_table(frame, sorted)
-        table += items_table
+        for group, items in sorted:
+            if group is not None:  # Create label
+                if isinstance(group, datetime.date):  # Format date
+                    group = '{:%a, %b %-d, %Y}'.format(group)
+                label = ttk.Label(frame, text=group)
+            group_label = None if (group is None) else label
+
+            group_items = []
+            for item in items:
+                # Check button
+                check_button = Checkbutton(frame)
+                if item.is_checked:
+                    check_button_select()
+                check_button.bind('<Button-1>', lambda event, id=item.id: self.controller.toggle_check(id))
+
+                # Item name
+                name = self.get_item_name(item)
+                item_label = ttk.Label(frame, text=name)
+                item_label.bind('<Button-1>', lambda event, id=item.id: self.controller.onclick_item(id))
+
+                group_items.append((check_button, item_label))
+
+            list_block.append((group_label, group_items))
+
+        parts['list block'] = list_block
 
         # Add new item
         add_button = Button(frame, text='+')
         entry = Entry(frame)
-        add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_item(entry.get(), self.current_list))
-        table.append([add_button, entry])
+        add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_item(entry.get(), item))
+        parts['add'] = [add_button, entry]
 
-        for i in range(len(table)):
-            for j in range(len(table[i])):
-                w = table[i][j]
-                w_class = w.winfo_class()
-                columnspan = 1
-                if (i in [0, 1]) & (w_class == 'TLabel'):
-                    w['style'] = 'options.' + w_class
-                elif (j == 0) & (w_class == 'TLabel'):
-                    w['style'] = 'sort_label.' + w_class
-                    columnspan = 2
-                elif (j == 1) & (w_class == 'TLabel'):
-                    if (self.current_list.id != 0) & (i == 2): 
-                        w['style'] = 'field.' + w_class
-                    elif i % 2 == 1:
-                        w['style'] = 'yellow_alt_1.' + w_class
-                    else:
-                        w['style'] = 'yellow_alt_2.' + w_class
-                w.grid(row=i, column=j, columnspan=columnspan, sticky=W+E, padx=2, pady=1)
+        return parts
+
+    def make_grid_refresh_left(self, parts):
+        row_order = ['show', 'sort', 'list name', 'list block', 'add']
+
+        current_row = 1
+        for row_name in row_order:
+            if row_name not in parts:
+                continue
+
+            # Options
+            if row_name in ['show', 'sort']:
+                label, option = parts[row_name]
+                label['style'] = 'options.TLabel'
+                label.grid(row=current_row, column=1, sticky=W+E, padx=2, pady=1)
+                option.grid(row=current_row, column=2, sticky=W+E, padx=2, pady=1)
+
+            # Up & List name
+            if row_name == 'list name':
+                button, label = parts[row_name]
+                label['style'] = 'field.TLabel'
+                button.grid(row=current_row, column=1, sticky=W+E, padx=2, pady=1)
+                label.grid(row=current_row, column=2, sticky=W+E, padx=2, pady=1)
+
+            # Items
+            item_count = 1
+            if row_name == 'list block':
+                for group_label, items in parts[row_name]:
+                    if group_label is not None:
+                        group_label['style'] = 'sort_label.TLabel'
+                        group_label.grid(row=current_row, column=1, columnspan=2, sticky=W+E, padx=2, pady=1)
+                        current_row += 1
+
+                    for check, label in items:
+                        style = 'yellow_alt_1.TLabel' if (item_count % 2 == 1) else 'yellow_alt_2.TLabel'
+                        label['style'] = style
+                        check.grid(row=current_row, column=1, sticky=W+E, padx=2, pady=1)
+                        label.grid(row=current_row, column=2, sticky=W+E, padx=2, pady=1)
+                        current_row += 1
+                        item_count += 1
+
+                current_row -= 1  # Subtract last extra
+
+            # Add
+            if row_name == 'add':
+                button, entered = parts[row_name]
+                button.grid(row=current_row, column=1, sticky=W+E, padx=2, pady=1)
+                entered.grid(row=current_row, column=2, sticky=W+E, padx=2, pady=1)
+
+            current_row += 1
 
     def get_resized_tk_image(self, pil_image, side_max):
         image = pil_image.copy()
@@ -171,7 +202,51 @@ class UIItemList(UITabInNB):
         if self.current_item.id == 0:  # If top level
             return
 
-        item = self.current_item
+        parts = self.get_show_details_parts(frame, self.current_item)
+        self.make_grid_refresh_right(parts)
+
+    def make_grid_refresh_right(self, parts):
+        row_order = [name_, due_date_, priority_, picture_, money_,
+                     contact_info_, created_date_, 'edit', 'add']
+
+        current_row = 1
+        for row_name in row_order:
+            if row_name not in parts:
+                continue
+
+            # Item name
+            if row_name == name_:
+                label = parts[row_name]
+                label['style'] = 'subfield.TLabel'
+                label.grid(row=current_row, column=1, columnspan=2, sticky=W+E, padx=2, pady=1)
+
+            # Details
+            if row_name not in [name_, 'edit', 'add']:
+                label_1, label_2 = parts[row_name]
+
+                # Color
+                style = 'grey_alt_1.TLabel' if (current_row % 2 == 1) else 'grey_alt_2.TLabel'
+                label_1['style'] = style
+                if row_name != picture_:
+                    label_2['style'] = style
+
+                label_1.grid(row=current_row, column=1, sticky=W+E+N+S, padx=2, pady=1)
+                label_2.grid(row=current_row, column=2, sticky=W+E+N+S, padx=2, pady=1)
+
+            # Edit button
+            if row_name == 'edit':
+                button = parts[row_name]
+                button.grid(row=current_row, column=1, columnspan=2, sticky=W+E, padx=2, pady=1)
+
+            # Add
+            if row_name == 'add':
+                button, entered = parts[row_name]
+                button.grid(row=current_row, column=1, sticky=W+E, padx=2, pady=1)
+                entered.grid(row=current_row, column=2, sticky=W+E, padx=2, pady=1)
+
+            current_row += 1
+
+    def get_show_details_parts(self, frame, item):
         item_dict = self.get_item_dict(item)
         format_dict = {due_date_: (lambda due_date: '{:%a, %b %-d, %Y}'.format(due_date)),
                        priority_: (lambda priority: priority.name),
@@ -180,13 +255,11 @@ class UIItemList(UITabInNB):
                        contact_info_: (lambda contact_info: contact_info.block_str()),
                        created_date_: (lambda created_date: '{:%-m/%-d/%Y %-I:%M%p}'.format(created_date))}
 
-        table = []
+        parts = {}
 
         # Name
         name = self.get_item_name(item)
-
-        label = ttk.Label(frame, text=name)
-        table.append([label])
+        parts[name_] = ttk.Label(frame, text=name)
 
         # Details
         for field in [due_date_, priority_, picture_, money_, contact_info_, created_date_]:
@@ -202,19 +275,21 @@ class UIItemList(UITabInNB):
                 label_2.image = value
             else:
                 label_2 = ttk.Label(frame, text=value)
-            table.append([label_1, label_2])
+            parts[field] = [label_1, label_2]
 
         # Edit button
         edit_button = Button(frame, text='Edit me')
         edit_button.bind('<Button-1>', lambda event: self.to_edit_mode())
-        table.append([edit_button])
+        parts['edit'] = edit_button
 
         # Add new item
-        if len(self.current_item) == 0:  # If has no item
+        if len(item) == 0:  # If has no item
             add_button = Button(frame, text='+')
             entry = Entry(frame)
-            add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_child(entry.get(), self.current_item))
-            table.append([add_button, entry])
+            add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_child(entry.get(), item))
+            parts['add'] = [add_button, entry]
+
+        return parts
 
         for i in range(len(table)):
             for j in range(len(table[i])):
@@ -235,44 +310,77 @@ class UIItemList(UITabInNB):
         frame.cleanup()
 
         label = self.get_label_dict(frame, [name_, due_date_, priority_, picture_, money_, contact_info_]) 
-        form_dict, widget_dict = self.get_form_dict(self.right, self.current_item)
+        form_dict, widget_dict = self.get_update_form_dict(self.right, self.current_item)
         update_button = Button(frame, text='Update!',
                                command=(lambda id=self.current_item.id, form_dict=form_dict:
                                         self.controller.update_item(id, values=self.get_update_item_values(form_dict))))
         remove_button = Button(frame, text='Remove',
                                command=(lambda id=self.current_item.id: self.controller.remove_item(id)))
 
-        table = [[label[name_], widget_dict[name_]],
-                 [label[due_date_], widget_dict[due_date_][month_],
-                  widget_dict[due_date_][day_], widget_dict[due_date_][year_]],
-                 [label[priority_], widget_dict[priority_]],
-                 [label[picture_], widget_dict[picture_]['selected'],
-                  widget_dict[picture_]['remove'], widget_dict[picture_]['upload']],
-                 [label[money_], widget_dict[money_]],
-                 [label[contact_info_], widget_dict[contact_info_]],
-                 [update_button],
-                 [remove_button]]
+        parts = {}
+        parts[name_] = (label[name_], widget_dict[name_])
+        parts[due_date_] = (label[due_date_], widget_dict[due_date_][month_],
+                            widget_dict[due_date_][day_], widget_dict[due_date_][year_])
+        parts[priority_] = (label[priority_], widget_dict[priority_])
+        parts[picture_] = (label[picture_], widget_dict[picture_]['selected'],
+                           widget_dict[picture_]['upload'], widget_dict[picture_]['remove'])
+        parts[money_] = (label[money_], widget_dict[money_])
+        parts[contact_info_] = (label[contact_info_], widget_dict[contact_info_])
+        parts['update'] = update_button
+        parts['remove'] = remove_button
+        self.make_grid_to_edit_mode(parts)
 
-        for i in range(len(table)):
-            for j in range(len(table[i])):
-                w = table[i][j]
-                w_class = w.winfo_class()
-                if (j == 0) and (w_class == 'TLabel'):
-                    if i % 2 == 1:
-                        w['style'] = 'grey_alt_1.' + w_class
-                    else:
-                        w['style'] = 'grey_alt_2.' + w_class
-                if i > len(table) - 3:  # If last 2 rows
-                    columnspan = 4
-                elif j == 0:  # If label column
-                    columnspan = 1
-                elif len(table[i]) == 2:  # Entry is not due date
-                    columnspan = 3
+    def make_grid_to_edit_mode(self, parts):
+        row_order = [name_, due_date_, priority_, picture_, money_,
+                     contact_info_, 'update', 'remove']
+
+        current_row = 1
+        for row_name in row_order:
+            # Field name
+            if row_name not in ['update', 'remove']:
+                label = parts[row_name][0]
+
+                # Row span
+                rowspan = 1
+                if row_name == picture_:
+                    rowspan = 2
+
+                # Color
+                ith_field = row_order.index(row_name)
+                if ith_field % 2 == 1:
+                    label['style'] = 'grey_alt_1.TLabel'
                 else:
-                    columnspan = 1
-                w.grid(row=i, column=j, columnspan=columnspan, sticky=W+E, padx=2, pady=1)
+                    label['style'] = 'grey_alt_2.TLabel'               
 
-    def get_form_dict(self, frame, item):
+                label.grid(row=current_row, column=1, rowspan=rowspan, sticky=W+E+N+S, padx=2, pady=1)
+
+            # User input
+            if  row_name in [name_, priority_, money_, contact_info_]:
+                label, entered = parts[row_name]
+                entered.grid(row=current_row, column=2, columnspan=3, sticky=W+E+N+S, padx=2, pady=1)
+
+            if row_name == due_date_:
+                label, e1, e2, e3 = parts[row_name]
+                col = 2
+                for entered in [e1, e2, e3]:
+                    entered.grid(row=current_row, column=col, sticky=W+E+N+S, padx=2, pady=1)
+                    col += 1
+
+            if row_name == picture_:
+                label, selected, upload, remove = parts[row_name]
+                selected.grid(row=current_row, rowspan=2, column=2, columnspan=2, padx=2, pady=1)
+                upload.grid(row=current_row, column=4, sticky=W+E, padx=2, pady=1)
+                remove.grid(row=current_row+1, column=4, sticky=W+E, padx=2, pady=1)
+                current_row += 1  # Extra row
+
+            # Button
+            if row_name in ['update', 'remove']:
+                button = parts[row_name]
+                button.grid(row=current_row, column=1, columnspan=4, sticky=W+E, padx=2, pady=1)
+           
+            current_row += 1
+
+    def get_update_form_dict(self, frame, item):
         item_dict = self.get_item_dict(item)
 
         form_dict = {}
@@ -330,7 +438,7 @@ class UIItemList(UITabInNB):
         x_button = Button(frame, text=remove_str_,
                           command=lambda label=label, label_path=label_path:
                                   self.remove_img_onclick(label, label_path))
-        up_button = Button(frame, text='Upload',
+        up_button = Button(frame, text='↑',
                            command=lambda label=label, label_path=label_path:
                                    self.upload_img_onclick(label, label_path))
 
@@ -364,6 +472,8 @@ class UIItemList(UITabInNB):
         return form_dict, widget_dict
 
     def remove_img_onclick(self, label, label_path):
+        label.grid_remove()  # With grid_remove, widget remembers its position etc.
+                             # With grid_forget, widget forgets all grid options
         label_path.configure(text='remove')
 
     def upload_img_onclick(self, label, label_path):
@@ -371,7 +481,14 @@ class UIItemList(UITabInNB):
                         initialdir = '.',
                         title = 'Select an image!',
                         filetypes = (('jpeg files','*.jpg'), ('all files','*.*')))
-        label_path.configure(text=file_path)
+
+        if file_path != '':  # File is selected
+            pil_image = Image.open(file_path)
+            tk_image = self.get_resized_tk_image(pil_image, 50)
+            label.configure(image=tk_image)
+            label.image = tk_image
+            label.grid()
+        label_path.configure(text=file_path)  # '' means same as before
 
     def get_update_item_values(self, form_dict):
         values = {}
@@ -399,8 +516,6 @@ class UIItemList(UITabInNB):
         file_path = form_dict[picture_]['text']
         skip_update = False
         picture = None
-
-        print('new file', file_path)
 
         if file_path == '':  # Unchanged
             skip_update = True
