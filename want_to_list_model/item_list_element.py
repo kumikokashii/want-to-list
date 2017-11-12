@@ -19,7 +19,7 @@ class ItemListElement(list):
         self.created_date = created_date  # datetime
         self.due_date = due_date  # date
         self.priority = priority  # Priority
-        self.picture = picture  # Picture
+        self.picture = picture  # PIL Image
         self.money = money  # Money
         self.contact_info = contact_info  # ContactInfo
         self.is_checked = is_checked  # boolean
@@ -151,6 +151,9 @@ class ItemListElement(list):
 
     def update_priority(self, priority):
         self.priority = priority
+
+    def update_picture(self, picture):
+        self.picture = picture
 
     def refresh_money_amount_self_and_parents(self):
         if self.id == 0:  # Done if root

@@ -1,11 +1,12 @@
 
 from tkinter import *
-from tkinter import ttk
+from tkinter import ttk, filedialog
+
+from PIL import Image, ImageTk
+import datetime
 
 from str_vars import *
 from .ui_tab_in_notebook import *
-
-import datetime
 
 class UIItemList(UITabInNB):
     def __init__(self, parent, tab_name, organizer): 
@@ -156,6 +157,11 @@ class UIItemList(UITabInNB):
                         w['style'] = 'yellow_alt_2.' + w_class
                 w.grid(row=i, column=j, columnspan=columnspan, sticky=W+E, padx=2, pady=1)
 
+    def get_resized_tk_image(self, pil_image, side_max):
+        image = pil_image.copy()
+        image.thumbnail((side_max, side_max), Image.ANTIALIAS)
+        return ImageTk.PhotoImage(image)
+
     def refresh_right(self, new_item=None):
         if new_item is not None:
             self.current_item = new_item
@@ -169,6 +175,7 @@ class UIItemList(UITabInNB):
         item_dict = self.get_item_dict(item)
         format_dict = {due_date_: (lambda due_date: '{:%a, %b %-d, %Y}'.format(due_date)),
                        priority_: (lambda priority: priority.name),
+		       picture_: (lambda picture: self.get_resized_tk_image(picture, 200)),
                        money_: (lambda money: str(money)),
                        contact_info_: (lambda contact_info: contact_info.block_str()),
                        created_date_: (lambda created_date: '{:%-m/%-d/%Y %-I:%M%p}'.format(created_date))}
@@ -190,7 +197,11 @@ class UIItemList(UITabInNB):
             format = format_dict[field]
             value = format(content)
             label_1 = ttk.Label(frame, text=field)
-            label_2 = ttk.Label(frame, text=value)
+            if field == picture_:
+                label_2 = ttk.Label(frame, image=value)
+                label_2.image = value
+            else:
+                label_2 = ttk.Label(frame, text=value)
             table.append([label_1, label_2])
 
         # Edit button
@@ -213,9 +224,9 @@ class UIItemList(UITabInNB):
                 if w_class == 'TLabel':
                     if i == 0:
                         w['style'] = 'subfield.' + w_class
-                    elif i % 2 == 1:
+                    #elif i % 2 == 1:
                         w['style'] = 'grey_alt_1.' + w_class
-                    else:
+                    #else:
                         w['style'] = 'grey_alt_2.' + w_class
                 table[i][j].grid(row=i, column=j, columnspan=columnspan, sticky=W+E+N+S, padx=2, pady=1)
 
@@ -235,7 +246,7 @@ class UIItemList(UITabInNB):
                  [label[due_date_], widget_dict[due_date_][month_],
                   widget_dict[due_date_][day_], widget_dict[due_date_][year_]],
                  [label[priority_], widget_dict[priority_]],
-                 # [label[picture_], widget_dict[picture_]],
+                 [label[picture_], widget_dict[picture_]],
                  [label[money_], widget_dict[money_]],
                  [label[contact_info_], widget_dict[contact_info_]],
                  [update_button],
@@ -307,9 +318,23 @@ class UIItemList(UITabInNB):
         form_dict[priority_] = variable
         widget_dict[priority_] = option_menu
 
-        # Image
-        #form_dict[picture_] = None
-        #widget_dict[picture_] = None 
+        # Picture
+        label = ttk.Label(frame)  # Label to contain a picture
+        label_path = ttk.Label(frame, text='')  # Hidden label to store path to uploaded pic
+        pil_img = None  # PIL Image to send to model
+        if item_dict[picture_] is not None:
+            pil_img = item_dict[picture_]
+            tk_image = ImageTk.PhotoImage(pil_img)  # tk object
+            label.configure(image=tk_image)
+            label.image = tk_image
+
+        x_button = Button(frame, text=remove_str_)  # NEED TO ADD COMMAND
+        up_button = Button(frame, text='Upload',
+                           command=lambda label=label, label_path=label_path:
+                                   self.upload_img_onclick(label, label_path))
+
+        form_dict[picture_] = {'thumbnail': label, 'path': label_path}
+        widget_dict[picture_] = up_button
 
         # Money
         entry = Entry(frame)
@@ -337,6 +362,13 @@ class UIItemList(UITabInNB):
 
         return form_dict, widget_dict
 
+    def upload_img_onclick(self, label, label_path):
+        file_path = filedialog.askopenfilename(
+                        initialdir = '.',
+                        title = 'Select an image!',
+                        filetypes = (('jpeg files','*.jpg'), ('all files','*.*')))
+        label_path.configure(text=file_path)
+
     def get_update_item_values(self, form_dict):
         values = {}
 
@@ -359,8 +391,9 @@ class UIItemList(UITabInNB):
         # Priority
         values[priority_] = form_dict[priority_].get()
 
-        # Image
-        #
+        # Picture
+        file_path = form_dict[picture_]['path']['text']
+        values[picture_] = Image.open(file_path)
 
         # Money
         input = form_dict[money_].get()
