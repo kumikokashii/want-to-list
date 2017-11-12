@@ -21,13 +21,16 @@ class UserInterface(Tk):
     def set_controller(self, controller):
         self.controller = controller
         self.item_list.controller = controller.item_list
+        self.item_list.frame_show_list.controller = controller.item_list
+        self.item_list.frame_show_item.controller = controller.item_list
+        self.item_list.frame_edit_item.controller = controller.item_list
         self.contact_info.controller = controller.contact_info
         self.priorities.controller = controller.priorities
         self.settings.controller = controller.settings
 
     def initialize(self):
-        self.item_list.refresh_left(self.organizer.item_list.root)
-        self.item_list.refresh_right(self.organizer.item_list.root)
+        self.item_list.refresh_list(self.organizer.item_list.root)
+        self.item_list.refresh_item(self.organizer.item_list.root)
         self.contact_info.refresh_view()
         self.contact_info.refresh_add()
         self.priorities.refresh()

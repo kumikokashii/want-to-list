@@ -14,33 +14,33 @@ class CTRLItemList():
         self.item_list.toggle_check(id)
 
         # Refresh Item List
-        self.ui.refresh_left()
-        #self.ui.refresh_right()
+        self.ui.refresh_list()
+        #self.ui.refresh_item()
 
     def onclick_item(self, id):
         item = self.item_list.get_elem_by_id(id)
 
         if len(item) > 0:  # If there are children items, show them on Left
-            self.ui.refresh_left(item)
+            self.ui.refresh_list(item)
 
         # Show self details on Right
-        self.ui.refresh_right(item)
+        self.ui.refresh_item(item)
 
     def onclick_title(self, id):
         item = self.item_list.get_elem_by_id(id)
-        self.ui.refresh_right(item)
+        self.ui.refresh_item(item)
 
     def add_item(self, name, parent):
         item = self.item_list.add_item(name=name, parent=parent)
 
-        self.ui.refresh_left()
-        self.ui.refresh_right(item)
+        self.ui.refresh_list()
+        self.ui.refresh_item(item)
 
     def add_child(self, name, parent):
         item = self.item_list.add_item(name=name, parent=parent)
 
-        self.ui.refresh_left(parent)
-        self.ui.refresh_right(item)
+        self.ui.refresh_list(parent)
+        self.ui.refresh_item(item)
 
     def update_item(self, id, values):
 
@@ -71,14 +71,14 @@ class CTRLItemList():
                                    picture_skip_update, picture, amount, contact_info_name) 
 
         # Refresh UI
-        self.ui.refresh_left()
-        self.ui.refresh_right()
+        self.ui.refresh_list()
+        self.ui.refresh_item()
 
     def remove_item(self, id): 
         item = self.item_list.get_elem_by_id(id)
         new_left = item.parent if (len(item) > 0) else None
         self.item_list.remove_item(id)
 
-        self.ui.refresh_left(new_left)
-        self.ui.refresh_right(self.item_list.root)
+        self.ui.refresh_list(new_left)
+        self.ui.refresh_item(self.item_list.root)
 
