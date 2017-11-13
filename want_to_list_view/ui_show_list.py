@@ -3,6 +3,7 @@ from tkinter import *
 
 from str_vars import *
 from .ui_tab_in_notebook import *
+from .ui_check_button import *
 
 import datetime
 
@@ -88,9 +89,9 @@ class UIShowList(UIFrame):
             group_items = []
             for item in items:
                 # Check button
-                check_button = Checkbutton(self)
+                check_button = UICheckButton(self)
                 if item.is_checked:
-                    check_button_select()
+                    check_button.select()
                 check_button.bind('<Button-1>', lambda event, id=item.id: self.controller.toggle_check(id))
 
                 # Item name
@@ -147,7 +148,7 @@ class UIShowList(UIFrame):
                     for check, label in items:
                         style = 'yellow_alt_1.TLabel' if (item_count % 2 == 1) else 'yellow_alt_2.TLabel'
                         label['style'] = style
-                        check.grid(row=current_row, column=1, sticky=W+E, padx=2, pady=1)
+                        check.grid(row=current_row, column=1, padx=2, pady=1)
                         label.grid(row=current_row, column=2, sticky=W+E, padx=2, pady=1)
                         current_row += 1
                         item_count += 1

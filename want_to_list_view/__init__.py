@@ -1,4 +1,5 @@
 from .ui_style import *
+from .ui_check_button import *
 from .ui_contact_info import *
 from .ui_edit_item import *
 from .ui_item_list import *
