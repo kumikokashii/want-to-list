@@ -186,6 +186,14 @@ class ItemListElement(list):
     def update_contact_info(self, contact_info):
         self.contact_info = contact_info
 
+    def check_all_children(self):
+        for item in self:
+            item.is_checked = True
+            item.check_all_children()
+
     def toggle_check(self):
         self.is_checked = not self.is_checked
+        if self.is_checked:  # If checked, check all below
+            self.check_all_children()
+
 
