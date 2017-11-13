@@ -20,10 +20,7 @@ class UserInterface(Tk):
 
     def set_controller(self, controller):
         self.controller = controller
-        self.item_list.controller = controller.item_list
-        self.item_list.frame_show_list.controller = controller.item_list
-        self.item_list.frame_show_item.controller = controller.item_list
-        self.item_list.frame_edit_item.controller = controller.item_list
+        self.item_list.set_controller(controller.item_list)
         self.contact_info.controller = controller.contact_info
         self.priorities.controller = controller.priorities
         self.settings.controller = controller.settings

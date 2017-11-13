@@ -8,7 +8,6 @@ from .ui_tab_in_notebook import *
 class UIEditItem(UIFrame):
     def __init__(self, ui_item_list):
         super().__init__(ui_item_list)
-        self.controller = ui_item_list.controller
         self.priority_list = ui_item_list.priority_list
         self.contact_info_book = ui_item_list.contact_info_book
         self.item = None 

@@ -7,7 +7,6 @@ from .ui_edit_item import *
 class UIItemList(UITabInNB):
     def __init__(self, parent, tab_name, organizer): 
         super().__init__(parent, tab_name)
-        self.controller = None
         self.item_list = organizer.item_list
         self.priority_list = organizer.priority_list
         self.contact_info_book = organizer.contact_info_book
@@ -15,6 +14,12 @@ class UIItemList(UITabInNB):
         self.frame_show_list = UIShowList(self)
         self.frame_show_item = UIShowItem(self)
         self.frame_edit_item = UIEditItem(self)
+
+    def set_controller(self, controller):
+        self.controller = controller
+        self.frame_show_list.controller = controller
+        self.frame_show_item.controller = controller
+        self.frame_edit_item.controller = controller
 
     def refresh_list(self, new_list=None):
         self.frame_show_list.refresh(new_list)

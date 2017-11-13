@@ -8,7 +8,6 @@ class UIShowItem(UIFrame):
     def __init__(self, ui_item_list):
         super().__init__(ui_item_list)
         self.ui_item_list = ui_item_list
-        self.controller = ui_item_list.controller
         self.current_item = ui_item_list.item_list.root
 
     def refresh(self, new_item=None):
