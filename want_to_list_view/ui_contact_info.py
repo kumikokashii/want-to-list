@@ -34,7 +34,8 @@ class UIContactInfo(UITabInNB):
 
         # Contact Infos
         contact_infos = []
-        for contact_info in self.contact_info_book:
+        sorted = self.contact_info_book.get_sorted_by_name()
+        for contact_info in sorted:
             id = contact_info.id
             name = contact_info.name
             phone = contact_info.phone

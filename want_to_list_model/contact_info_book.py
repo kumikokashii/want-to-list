@@ -24,3 +24,5 @@ class ContactInfoBook(IncrementalIDList):
         contact_info = ContactInfo(id, name, phone, address)
         self.append(contact_info)
 
+    def get_sorted_by_name(self):
+        return sorted(self, key=lambda contact_info: contact_info.name)
