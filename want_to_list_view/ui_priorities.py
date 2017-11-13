@@ -13,53 +13,99 @@ class UIPriorities(UITabInNB):
     def refresh(self):
         self.cleanup()
 
-        header = ['Name', 'Importance', 'Remove']
-        label = self.get_label_dict(self, header)
-        header_label = [label[h] for h in header]
+        pieces = self.get_pieces()
+        form_dict = self.get_form_dict(pieces)
+        self.add_button_to_pieces(pieces, form_dict)
 
+        parts = self.get_parts(pieces)
+        self.make_grid(parts)
+
+    def get_pieces(self):
+        pieces = {}
+
+        # Header
+        header = []
+        for field in ['Name', 'Importance', 'Remove']:
+            header.append(ttk.Label(self, text=field))
+        pieces['header'] = header
+
+        # Existing priorities
+        existing = []
         sorted = self.priority_list.get_sorted_by_importance()
-        n = len(sorted)
-
-        all_p = []
-        for i in range(n+1):
-            priority = (None if i == n else sorted[i])
-            id = (-1 if i == n else priority.id)
-            name = ('' if i == n else priority.name)
-            importance = ('' if i == n else priority.importance)
-
+        for priority in sorted:
             entry_1 = Entry(self)
-            entry_1.insert(0, name)
+            entry_1.insert(0, priority.name)
             entry_2 = Entry(self, width=3)
-            entry_2.insert(0, importance)
-            x_button = Button(self, text=remove_str_, 
-                              command=(lambda id=id: self.controller.remove(id)))
-            if i == n:
-                x_button = None
-            all_p.append((id, entry_1, entry_2, x_button))
+            entry_2.insert(0, priority.importance)
+            x_button = Button(self, text=remove_str_,
+                              command=(lambda id=priority.id: self.controller.remove(id)))
+            existing.append((priority.id, entry_1, entry_2, x_button))
+        pieces['existing'] = existing
 
+        # New priority
+        entry_1 = Entry(self, width=3)
+        entry_2 = Entry(self, width=3)
+        pieces['new'] = (-1, entry_1, entry_2)  # Id = -1 indicates it doesn't currently exist
+
+        return pieces 
+
+    def get_form_dict(self, pieces):
         form_dict = {}
-        for i in range(len(all_p)):
-            id, entry_1, entry_2 = all_p[i][0: 3]
+
+        # Existing priorities
+        for id, entry_1, entry_2, x_button in pieces['existing']:
             form_dict[id] = (entry_1, entry_2)
 
+        # New priority
+        id, entry_1, entry_2 = pieces['new']
+        form_dict[id] = (entry_1, entry_2)
+
+        return form_dict
+
+    def add_button_to_pieces(self, pieces, form_dict):
         button = Button(self, text='Edit!', 
                         command=(lambda: self.controller.edit(self.get_values(form_dict))))
+        pieces['edit'] = button
 
-        table = [header_label] + [[p[1], p[2], p[3]] for p in all_p] + [[button]]
+    def get_parts(self, pieces):
+        parts = {}
 
-        for i in range(len(table)):
-            for j in range(len(table[i])):
-                w = table[i][j]
-                if w is None:
-                    continue
-                w_class = w.winfo_class()
-                if i == 0:
-                    w['style'] = 'field.' + w_class
-                if i == len(table) - 1:
-                    columnspan = 2
-                else:
-                    columnspan = 1
-                w.grid(row=i, column=j, columnspan=columnspan, sticky=W+E, padx=2, pady=1)
+        for field, content in pieces.items():
+            if field == 'existing':
+                parts[field] = []
+                for sub_content in content:
+                   parts[field].append(sub_content[1:])
+            elif field == 'new':
+                parts[field] = content[1:]
+            else:
+                parts[field] = content 
+
+        return parts
+
+    def make_grid(self, parts):
+        # Header
+        for i in range(len(parts['header'])):
+            w = parts['header'][i]
+            w['style'] = 'field.TLabel'  # Color
+            w.grid(row=1, column=i+1, sticky=W+E, padx=2, pady=1)
+
+        # Existing priorities
+        for i in range(len(parts['existing'])):
+            ith_row = parts['existing'][i]
+            for j in range(len(ith_row)):
+                w = ith_row[j]
+                w.grid(row=i+2, column=j+1, sticky=W+E, padx=2, pady=1)
+        current_row = 1 + len(parts['existing']) + 1
+
+        # New priority
+        for i in range(len(parts['new'])):
+            w = parts['new'][i]
+            w.grid(row=current_row, column=i+1, sticky=W+E, padx=2, pady=1)
+        current_row += 1
+
+        # Edit button
+        button = parts['edit']
+        button.grid(row=current_row, column=1, columnspan=2, sticky=W+E, padx=2, pady=1)
 
     def get_values(self, form_dict):
         values = []

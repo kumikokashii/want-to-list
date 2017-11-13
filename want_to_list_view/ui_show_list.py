@@ -12,7 +12,6 @@ class UIShowList(UIFrame):
         self.ui_item_list = ui_item_list
         self.controller = ui_item_list.controller
         self.current_list = ui_item_list.item_list.root
-        self.show = ui_item_list.show 
         self.sort_key = name_
 
     def refresh(self, new_list=None):
@@ -25,9 +24,9 @@ class UIShowList(UIFrame):
         self.make_grid(parts)
 
     def get_sorted(self):
-        if self.show == 'current list only':
+        if self.ui_item_list.show == 'current list only':
             sorted = self.current_list.get_sorted_with_label_text_by(self.sort_key)
-        if self.show == 'all under this list':
+        if self.ui_item_list.show == 'all under this list':
             sorted = self.current_list.get_all_childless_items().get_sorted_with_label_text_by(self.sort_key)
         return sorted
 
@@ -48,7 +47,7 @@ class UIShowList(UIFrame):
         label = ttk.Label(self, text='show')
 
         variable = StringVar(self)
-        variable.set(self.show)
+        variable.set(self.ui_item_list.show)
         variable.trace('w', lambda _0, _1, _2, show_var=variable: self.show_onchange(show_var))
 
         options = ['current list only', 'all under this list']
@@ -95,7 +94,7 @@ class UIShowList(UIFrame):
                 check_button.bind('<Button-1>', lambda event, id=item.id: self.controller.toggle_check(id))
 
                 # Item name
-                name = self.get_item_name(item, self.show)
+                name = self.get_item_name(item, self.ui_item_list.show)
                 item_label = ttk.Label(self, text=name)
                 item_label.bind('<Button-1>', lambda event, id=item.id: self.controller.onclick_item(id))
 
@@ -106,6 +105,7 @@ class UIShowList(UIFrame):
         parts['list block'] = list_block
 
         # Add new item
+        item = self.current_list
         add_button = Button(self, text='+')
         entry = Entry(self)
         add_button.bind('<Button-1>', lambda event, entry=entry: self.controller.add_item(entry.get(), item))
