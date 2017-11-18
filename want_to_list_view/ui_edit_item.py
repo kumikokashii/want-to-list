@@ -77,10 +77,10 @@ class UIEditItem(UIFrame):
             priorities.append(priority.name)
         
         variable = StringVar(self)
-        if priority is None:
+        if item.priority is None:
             variable.set(none_str_)
         else:
-            variable.set(priority.name)
+            variable.set(item.priority.name)
 
         option_menu = OptionMenu(self, variable, *priorities)
 
