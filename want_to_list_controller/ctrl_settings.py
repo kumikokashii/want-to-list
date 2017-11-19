@@ -11,3 +11,10 @@ class CTRLSettings():
     def start_fresh(self):
         self.organizer.start_fresh()
         self.ui.initialize()
+
+    def load(self, file_path):
+        self.organizer.load(file_path)
+        self.ui.initialize()
+
+    def save_as(self, file_path):
+        self.organizer.save(file_path)

@@ -20,7 +20,7 @@ class Organizer():
         self.priority_list = PriorityList()
         self.contact_info_book = ContactInfoBook()
         self.item_list = ItemList(self.item_type_list, self.priority_list, self.contact_info_book)
-        self.file_path = self.get_file_path()
+        self.set_file_path()  # create self.file_path
 
     def __str__(self):
         output = ''
@@ -38,34 +38,48 @@ class Organizer():
         output += str(self.item_list)
         return output
 
-    def get_file_path(self):
-        if os.path.isfile(Organizer.file_of_path_to_last_saved):
-            with open(Organizer.file_of_path_to_last_saved, 'r') as f:
-                return f.read()
+    def get_last_saved_file_path(self):
+        if not os.path.isfile(Organizer.file_of_path_to_last_saved):
+            return None
+        with open(Organizer.file_of_path_to_last_saved, 'r') as f:
+            return f.read()
 
-        # If no hidden file, use default 
-        return Organizer.default_file_path
+    def set_file_path(self):
+        last_saved_file_path = self.get_last_saved_file_path()
+        if (last_saved_file_path is None) or (not os.path.isfile(last_saved_file_path)):
+            self.file_path = Organizer.default_file_path
+        else:
+            self.file_path = last_saved_file_path
 
-    def load(self, file_path=default_file_path):
-        if not os.path.isfile(file_path):  # Do nothing if no such file
-            print('nothing', file_path)  # TEST
-            return
+    def swap(self, organizer):
+        o = organizer
+        self.priority_list.swap(o.priority_list)
+        self.contact_info_book.swap(o.contact_info_book)
+        self.item_list.swap(o.item_list, o.item_type_list, o.priority_list, o.contact_info_book)
+        self.item_type_list.swap(o.item_type_list)
 
-        with open(file_path, 'rb') as f:
+    def load(self, file_path=None):
+        if file_path is None:
+            last_saved_file_path = self.get_last_saved_file_path()
+            if os.path.isfile(last_saved_file_path):
+                file_path = last_saved_file_path
+            else:
+                return
+        else:  # Some kind of input given for file path
+            if not os.path.isfile(file_path):
+                return
+
+        with open(file_path, 'rb') as f:  # File path is valid at this point
             new_organizer = pickle.load(f)
-        self.item_type_list = new_organizer.item_type_list
-        self.priority_list = new_organizer.priority_list
-        self.contact_info_book = new_organizer.contact_info_book
-        self.item_list = new_organizer.item_list
+        self.swap(new_organizer)
         self.file_path = file_path
-        print('loaded', file_path)  # TEST
 
     def save(self, as_file_path=None):
         if as_file_path is not None:
             self.file_path = as_file_path
+
         with open(self.file_path, 'wb') as f:
             pickle.dump(self, f)  # Save pickle
-
         with open(Organizer.file_of_path_to_last_saved, 'w') as f:
             f.write(self.file_path)  # Update path to pickle in hidden file
 

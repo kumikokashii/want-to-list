@@ -25,6 +25,11 @@ class IncrementalIDList(list):
             output.append(elem)
         return output 
 
+    def swap(self, new_list):
+        self.clear()
+        for elem in new_list:
+            self.append(elem)
+
     def get_next_id(self):
         max_id = -1
         for elem in self:
