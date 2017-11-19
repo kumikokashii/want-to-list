@@ -51,15 +51,15 @@ class ItemList(IncrementalIDList):
 
     def remove_children_and_self(self, item):
         if len(item) > 0:
-            for child_item in item:
+            for child_item in item:  # Remove all children
                 self.remove_children_and_self(child_item)
-        item.parent.remove(item)  # Remove from parent
-        self.remove(item)  # Remove
+        self.remove(item)  # Remove self
 
     def remove_item(self, id):
         item = self.get_elem_by_id(id)
         parent = item.parent
 
+        item.parent.remove(item)  # Out of parent list
         self.remove_children_and_self(item)
         parent.refresh_money_amount_self_and_parents()
 
