@@ -12,11 +12,6 @@ class ItemList(IncrementalIDList):
         self.priority_list = priority_list
         self.contact_info_book = contact_info_book
 
-    def clear(self):
-        super().clear()
-        self.root.clear()
-        self.append(self.root)
-
     def set_root(self):
         id = self.get_next_id()
         created_date = datetime.today()
@@ -26,6 +21,21 @@ class ItemList(IncrementalIDList):
                                money=None, contact_info=None, is_checked=False)
         self.append(item)
         self.root = item
+
+    def clear(self):
+        super().clear()
+        self.root.clear()
+        self.append(self.root)
+
+    def swap(self, new_list, item_type_list, priority_list, contact_info_book):
+        super().clear()
+        for elem in new_list:
+            self.append(elem)
+
+        self.root = self.get_elem_by_id(0)
+        self.item_type_list.swap(item_type_list)
+        self.priority_list.swap(priority_list)
+        self.contact_info_book.swap(contact_info_book)
 
     def add_item(self, name, item_type=None, parent=None, 
                  due_date=None, priority=None, picture=None, money=None, 
