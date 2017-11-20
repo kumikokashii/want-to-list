@@ -1,3 +1,4 @@
+from pathlib import Path
 import os
 import sys
 
@@ -11,9 +12,9 @@ from .money import *
 import pickle
 
 class Organizer():
-    up2dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    default_file_path = up2dir + '/my_want_to_list.pickle'
-    file_of_path_to_last_saved = up2dir + '/.want_to_list_data'
+    app_dir = str(Path.home()) + '/.want_to_list'
+    file_of_path_to_last_saved = app_dir + '/.want_to_list_data'
+    default_file_path = app_dir + '/my_want_to_list.pickle'
 
     def __init__(self):
         self.item_type_list = ItemTypeList.get_default()
