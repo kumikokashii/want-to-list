@@ -13,8 +13,10 @@ import pickle
 
 class Organizer():
     app_dir = str(Path.home()) + '/.want_to_list'
+    if not os.path.isdir(app_dir):
+        os.makedirs(app_dir)
     file_of_path_to_last_saved = app_dir + '/.want_to_list_data'
-    default_file_path = app_dir + '/my_want_to_list.pickle'
+    default_file_path = app_dir + '/my_want_to_list.wtl'
 
     def __init__(self):
         self.item_type_list = ItemTypeList.get_default()

@@ -28,7 +28,7 @@ class UISettings(UITabInNB):
         file_path = filedialog.askopenfilename(
                         initialdir = Organizer.app_dir,
                         title = 'Select a file!',
-                        filetypes = (('pickle files','*.pickle'), ('all files','*.*')))
+                        filetypes = (('Want To List files', '*.wtl'), ('all files', '*.*')))
 
         if file_path != '':  # File is selected
             self.controller.load(file_path)
@@ -37,7 +37,7 @@ class UISettings(UITabInNB):
         file_path = filedialog.asksaveasfilename(
                         initialdir = Organizer.app_dir,
                         title = 'Save as?',
-                        defaultextension = '.pickle')
+                        defaultextension = '.wtl')
 
         if file_path != '':
             self.controller.save_as(file_path)
