@@ -18,10 +18,10 @@ class Organizer():
     file_of_path_to_last_saved = app_dir + '/.want_to_list_data'
     default_file_path = app_dir + '/my_want_to_list.wtl'
 
-    def __init__(self):
+    def __init__(self, priority_list=None, contact_info_book=None):
         self.item_type_list = ItemTypeList.get_default()
-        self.priority_list = PriorityList()
-        self.contact_info_book = ContactInfoBook()
+        self.priority_list = PriorityList() if (priority_list is None) else priority_list
+        self.contact_info_book = ContactInfoBook() if (contact_info_book is None) else contact_info_book
         self.item_list = ItemList(self.item_type_list, self.priority_list, self.contact_info_book)
         self.set_file_path()  # create self.file_path
 
@@ -100,21 +100,3 @@ class Organizer():
         for lst in [self.priority_list, self.contact_info_book, self.item_list]:
             lst.clear()
 
-    def get_test_instance():
-        organizer = Organizer()
-
-        l = organizer.item_list
-        l.add_item(name='Eat', due_date=date(2017, 11, 11))
-        l.add_item(name='Sleep', priority=organizer.priority_list.get_elem_by_id(0))
-        l.add_item(name='Drink')
-        l.add_item(name='Talk', contact_info=organizer.contact_info_book.get_elem_by_id(0))
-        l.add_item(name='Walk', is_checked=True)
-        l.add_item(name='Shrimp', parent=l.get_elem_by_name('Eat'))
-        l.add_item(name='Crab', parent=l.get_elem_by_name('Eat'))
-        l.add_item(name='Lobster', parent=l.get_elem_by_name('Eat'))
-        l.add_item(name='Michelada', parent=l.get_elem_by_name('Drink'), money=Money(3.50))
-        l.add_item(name='Sake', parent=l.get_elem_by_name('Drink'), money=Money(27))
-        l.add_item(name='Hot Sake', parent=l.get_elem_by_name('Sake'), money=Money(11))
-        l.add_item(name='Cold Sake', parent=l.get_elem_by_name('Sake'), money=Money(12.3))
-
-        return organizer
