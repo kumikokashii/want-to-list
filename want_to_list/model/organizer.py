@@ -61,6 +61,8 @@ class Organizer():
     def load(self, file_path=None):
         if file_path is None:
             last_saved_file_path = self.get_last_saved_file_path()
+            if last_saved_file_path is None:
+                return
             if os.path.isfile(last_saved_file_path):
                 file_path = last_saved_file_path
             else:

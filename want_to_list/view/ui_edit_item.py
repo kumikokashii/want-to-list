@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk, filedialog
 from PIL import Image
 
-from str_vars import *
+from ..str_vars import *
 from .ui_tab_in_notebook import *
 
 class UIEditItem(UIFrame):

@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 
-from str_vars import *
+from ..str_vars import *
 from .ui_tab_in_notebook import *
 from .ui_check_button import *
 

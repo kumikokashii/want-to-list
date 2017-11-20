@@ -1,5 +1,10 @@
-from tkinter import ttk
-from want_to_list_view import *
+from tkinter import Tk, ttk
+
+from .ui_style import *
+from .ui_item_list import *
+from .ui_contact_info import *
+from .ui_priorities import *
+from .ui_settings import *
 
 class UserInterface(Tk):
     def __init__(self, organizer):

@@ -1,5 +1,5 @@
-from str_vars import *
-from want_to_list_model import *
+from ..str_vars import *
+from ..model import *
 
 class CTRLContactInfo():
     def __init__(self, organizer, ui):
