@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import ttk, font
+from tkinter import ttk
 
 class UIStyle(ttk.Style):
     def __init__(self):

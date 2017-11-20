@@ -1,15 +1,12 @@
 from pathlib import Path
 import os
 import sys
+import pickle
 
 from .item_type_list import *
 from .priority_list import *
 from .contact_info_book import *
 from .item_list import *
-
-from .money import *
-
-import pickle
 
 class Organizer():
     app_dir = str(Path.home()) + '/.want_to_list'
