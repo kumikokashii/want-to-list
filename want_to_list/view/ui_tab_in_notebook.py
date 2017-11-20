@@ -2,7 +2,7 @@
 from tkinter import ttk
 from PIL import Image, ImageTk
 
-from str_vars import *
+from ..str_vars import *
 
 class UIFrame(ttk.Frame):
     def __init__(self, parent):

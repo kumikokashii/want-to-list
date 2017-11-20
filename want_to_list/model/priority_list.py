@@ -2,13 +2,6 @@ from .incremental_id_list import *
 from .priority import *
 
 class PriorityList(IncrementalIDList):
-    def get_test_instance():
-        priority_list = PriorityList()
-        priority_list.add_priority(name='high', importance=1)
-        priority_list.add_priority(name='normal', importance=2)
-        priority_list.add_priority(name='low', importance=3)
-        return priority_list
-
     def __init__(self):
         super().__init__()
 

@@ -2,7 +2,7 @@ from .incremental_id_list import *
 from .item_list_element import *
 from datetime import datetime, date
 
-from str_vars import *
+from ..str_vars import *
 
 class ItemList(IncrementalIDList):
     def __init__(self, item_type_list, priority_list, contact_info_book):

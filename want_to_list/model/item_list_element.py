@@ -1,6 +1,6 @@
 from .money import *
 
-from str_vars import *
+from ..str_vars import *
 
 class ItemListElement(list):
     def get_just_list():

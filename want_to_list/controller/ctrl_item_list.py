@@ -1,6 +1,6 @@
 from datetime import datetime, date
 
-from str_vars import *
+from ..str_vars import *
 
 class CTRLItemList():
     def __init__(self, organizer, ui):

@@ -2,6 +2,7 @@
 from tkinter import *
 
 from .ui_tab_in_notebook import *
+from ..model.organizer import *
 
 class UISettings(UITabInNB):
     def __init__(self, parent, tab_name):
@@ -25,18 +26,18 @@ class UISettings(UITabInNB):
 
     def load_onclick(self):
         file_path = filedialog.askopenfilename(
-                        initialdir = '.',
+                        initialdir = Organizer.app_dir,
                         title = 'Select a file!',
-                        filetypes = (('pickle files','*.pickle'), ('all files','*.*')))
+                        filetypes = (('Want To List files', '*.wtl'), ('all files', '*.*')))
 
         if file_path != '':  # File is selected
             self.controller.load(file_path)
 
     def save_as_onclick(self):
         file_path = filedialog.asksaveasfilename(
-                        initialdir = '.',
+                        initialdir = Organizer.app_dir,
                         title = 'Save as?',
-                        defaultextension = '.pickle')
+                        defaultextension = '.wtl')
 
         if file_path != '':
             self.controller.save_as(file_path)
