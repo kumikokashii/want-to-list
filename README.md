@@ -1,7 +1,7 @@
 # Want To List: Stop remembering and start listing!
 
 ## What is it?
-Desktop to-do list app written in Python (for now, and will be on smartphones next year!).
+To-do list app written in Python on Desktop (for now, and will be on smartphones next year!).
 
 <img src="https://github.com/kumikokashii/want-to-list/blob/master/screenshot.png" alt="screenshot" width="500px">
 
