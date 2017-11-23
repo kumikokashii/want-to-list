@@ -32,7 +32,9 @@ class UIEditItem(UIFrame):
         file_path = filedialog.askopenfilename(
                         initialdir = '.',
                         title = 'Select an image!',
-                        filetypes = (('jpeg files','*.jpg'), ('all files','*.*')))
+                        filetypes = (('jpeg files', '*.jpg'), ('jpeg files', '*.jpeg'),
+                                     ('png files', '*.png'),
+                                     ('all files', '*.*')))
 
         if file_path != '':  # File is selected
             pil_image = Image.open(file_path)
